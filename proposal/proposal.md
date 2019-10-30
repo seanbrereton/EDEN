@@ -1,6 +1,5 @@
 # School of Computing
 # Ca326 Year 3 Project Proposal Form
----
 
 **Project Title:** EDEN
 
@@ -15,7 +14,6 @@
 
 
 ## Project Description
----
 
 #### Description
 The main aim of our project is to show the evolution of artificial beings in a simulated environment. Artificial beings will be able to move around the environment, and perform actions such as eating and reproducing.
