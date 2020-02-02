@@ -11,7 +11,8 @@ namespace EDEN {
             // Constructor to generate a new random creature
             // TODO: Change values to random values, from Random class
 
-            Color color = Color.Red;
+            //Color color = Color.Red;
+            Color color = Rand.RandColor();
             int radius = 15;
             texture = Textures.Circle(color, radius);
 
