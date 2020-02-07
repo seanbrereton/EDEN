@@ -23,6 +23,11 @@ namespace EDEN {
             position = _position;
         }
 
+        public Entity(Color color, int height, int width, Vector2 _position) {
+            texture = Textures.Rect(color, height, width);
+            position = _position;
+        }
+
         double DegreeToRadian(float angle) {
             return Math.PI * angle / 180f;
         }

@@ -30,5 +30,14 @@ namespace EDEN {
             texture.SetData<Color>(colors);
             return texture;
         }
+
+        public static Texture2D Rect(Color color, int height, int width) {
+            Texture2D texture = new Texture2D(graphics, height, width);
+            Color[] colors = new Color[height * width];
+
+            for (int i = 0; i < colors.Length; ++i) colors[i] = color;
+            texture.SetData(colors);
+            return texture;
+        }
     }
 }
