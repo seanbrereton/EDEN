@@ -23,11 +23,32 @@ namespace EDEN {
             position = _position;
         }
 
+        double DegreeToRadian(float angle) {
+            return Math.PI * angle / 180f;
+        }
+
         public Vector2 Forward {
             get {
-                float x = (float)Math.Sin(rotation);
-                float y = (float)Math.Cos(rotation);
+                double rads = DegreeToRadian(rotation);
+                float x = (float)Math.Sin(rads);
+                float y = (float)Math.Cos(rads);
                 return new Vector2(x, y);
+            }
+        }
+
+        public Vector2 Sideways {
+            get {
+                Vector2 forward = Forward;
+                return new Vector2(forward.Y, -forward.X);
+            }
+        }
+
+        public Rectangle Rect {
+            get {
+                Point pos = position.ToPoint();
+                int width = texture.Width;
+                int height = texture.Height;
+                return new Rectangle(pos - new Point(width / 2, height / 2), new Point(texture.Width, texture.Height));
             }
         }
 
@@ -38,7 +59,7 @@ namespace EDEN {
         //}
     
         public void Draw(SpriteBatch spriteBatch) {
-            spriteBatch.Draw(texture, position, Color.White);
+            spriteBatch.Draw(texture, Rect, Color.White);
         }
 
         public void GoForward(float distance) {

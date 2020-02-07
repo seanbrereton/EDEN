@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 namespace EDEN {
     public static class Textures {
         static GraphicsDevice graphics;
@@ -21,6 +20,8 @@ namespace EDEN {
                     Vector2 pos = new Vector2(x - radius, y - radius);
                     if (pos.Length() > radius)
                         colors[i] = Color.Transparent;
+                    else if (pos.Length() > radius - 4)
+                        colors[i] = Color.Lerp(color, Color.Black, 0.2f);
                     else
                         colors[i] = color;
                 }
