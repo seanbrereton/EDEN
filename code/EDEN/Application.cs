@@ -9,13 +9,16 @@ namespace EDEN {
         public static MouseState mouse;
         public static GraphicsDeviceManager graphics;
 
+        int number;
+
         SpriteBatch spriteBatch;
 
         List<Creature> creatures;
+        List<Food> foods;
         List<Entity> entities;
 
         // Population settings
-        int initialPopulation = 128;
+        int initialPopulation = 256;
 
         // Display settings
         bool fullscreen = false;
@@ -32,8 +35,21 @@ namespace EDEN {
         }
 
         protected override void Initialize() {
-            layers = new int[] { 5, 8, 8, 3 };
+            layers = new int[] { 4, 2 };
+            
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            Textures.Init(this);
 
+            ConfigureScreen();
+
+            entities = new List<Entity>();
+            InitializeFood();
+            InitializePopulation();
+
+            base.Initialize();
+        }
+
+        void ConfigureScreen() {
             if (fullscreen) {
                 graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
                 graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -45,21 +61,24 @@ namespace EDEN {
             graphics.IsFullScreen = fullscreen;
 
             graphics.ApplyChanges();
+        }
 
-            Textures.Init(this);
+        void InitializePopulation() {
             creatures = new List<Creature>();
-            entities = new List<Entity>();
 
             for (int i = 0; i < initialPopulation; i++)
                 creatures.Add(new Creature());
-
+            
             entities.AddRange(creatures);
-
-            base.Initialize();
         }
 
-        protected override void LoadContent() {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+        void InitializeFood() {
+            foods = new List<Food>();
+
+            for (int i = 0; i < initialPopulation / 4; i++)
+                foods.Add(new Food());
+
+            entities.AddRange(foods);
         }
 
         protected override void Update(GameTime gameTime) {
@@ -70,18 +89,32 @@ namespace EDEN {
             if (mouse.RightButton == ButtonState.Pressed)
                 foreach (Creature creature in creatures)
                     creature.network = new NeuralNet(layers);
+            else if (mouse.LeftButton == ButtonState.Pressed)
+                foreach (Creature creature in creatures)
+                    creature.growing = true;
 
-            foreach (Entity entity in entities)
-                entity.Update();
+            List<Food> toBeEaten = new List<Food>();
+
+            foreach (Creature creature in creatures) {
+                creature.Update();
+                foreach (Food food in foods) {
+                    if (creature.rect.Contains(food.position)) {
+                        toBeEaten.Add(food);
+                    }
+                }
+            }
+
+            foreach (Food food in toBeEaten) {
+                food.position = Rand.Range(screenSize.ToVector2());
+            }
         }
 
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(bgColor);
             spriteBatch.Begin();
 
-            foreach (Entity entity in entities) {
+            foreach (Entity entity in entities)
                 entity.Draw(spriteBatch);
-            }
 
             spriteBatch.End();
             base.Draw(gameTime);

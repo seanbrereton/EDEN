@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,17 @@ namespace EDEN {
 
         public NeuralNet network;
 
-        // Network Inputs
-        float age = 0;
+        public float scale;
 
         // Network Outputs
         float rotationVelocity;
         float movementVelocity;
+
+        Texture2D eyeTexture;
+        Rectangle leftEyeRect;
+        Rectangle rightEyeRect;
+
+        public bool growing;
 
         public Creature() {
             // Creates a random neural network, using the applications layer parameters
@@ -33,8 +39,11 @@ namespace EDEN {
 
             // Creates a circle texture using the colour and radius generated
             Color color = Rand.RandColor();
-            int radius = 25;
-            texture = Textures.Circle(color, radius);
+            int radius = 15;
+            texture = Textures.Circle(color, radius, 4);
+            eyeTexture = Textures.Circle(Color.Black, radius / 3, radius / 5, Color.White);
+
+            scale = 0.2f;
         }
 
         public override void Update() {
@@ -44,9 +53,25 @@ namespace EDEN {
             // Uses the network outputs to change position and rotation
             position += Forward * movementVelocity * 10;
             rotation += rotationVelocity;
-            
+
+            // Adds to scale until fully grown
+            if (scale < 1 && growing)
+                scale += 0.005f;
+
             // Stays on the screen
-            KeepOnScreen()
+            KeepOnScreen();
+        }
+
+        public override void Draw(SpriteBatch spriteBatch) {
+            base.Draw(spriteBatch);
+
+            Point leftEyePos = (position + (Forward * (rect.Width * 0.35f)) + (Sideways * (rect.Width * 0.3f))).ToPoint();
+            Point rightEyePos = (position + (Forward * (rect.Width * 0.35f)) - (Sideways * (rect.Width * 0.3f))).ToPoint();
+            leftEyeRect = new Rectangle(leftEyePos.X - rect.Width / 6, leftEyePos.Y - rect.Height / 6, rect.Width / 3, rect.Height / 3);
+            rightEyeRect = new Rectangle(rightEyePos.X - rect.Width / 6, rightEyePos.Y - rect.Height / 6, rect.Width / 3, rect.Height / 3);
+
+            spriteBatch.Draw(eyeTexture, leftEyeRect, Color.White);
+            spriteBatch.Draw(eyeTexture, rightEyeRect, Color.White);
         }
 
         void KeepOnScreen() {
@@ -83,6 +108,13 @@ namespace EDEN {
                 // Normalizes the rotation to be in the range [-1, 1]
                 ((rotation % 360) / 180f) - 1
             };
+        }
+
+        public override Rectangle GetRect() {
+            int size = (int)(texture.Width * scale);
+            Point newPos = new Point((int)position.X - size / 2, (int)position.Y - size / 2);
+            Point sizePoint = new Point(size, size);
+            return new Rectangle(newPos, sizePoint);
         }
     }
 }

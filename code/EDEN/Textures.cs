@@ -8,11 +8,11 @@ namespace EDEN {
             graphics = app.GraphicsDevice;
         }
 
-        public static Texture2D Circle(Color color, int radius) {
+        // Draws circular texture
+        public static Texture2D Circle(Color color, int radius, int outlineWidth, Color outlineColor) {
             int diameter = radius * 2;
             Texture2D texture = new Texture2D(graphics, diameter, diameter);
             Color[] colors = new Color[diameter * diameter];
-
 
             for (int x = 0; x < diameter; x++) {
                 for (int y = 0; y < diameter; y++) {
@@ -20,8 +20,8 @@ namespace EDEN {
                     Vector2 pos = new Vector2(x - radius, y - radius);
                     if (pos.Length() > radius)
                         colors[i] = Color.Transparent;
-                    else if (pos.Length() > radius - 4)
-                        colors[i] = Color.Lerp(color, Color.Black, 0.2f);
+                    else if (pos.Length() > radius - outlineWidth)
+                        colors[i] = outlineColor;
                     else
                         colors[i] = color;
                 }
@@ -30,7 +30,12 @@ namespace EDEN {
             texture.SetData<Color>(colors);
             return texture;
         }
+        public static Texture2D Circle(Color color, int radius, int outlineWidth = 0) {
+            Color outlineColor = outlineWidth > 0 ? Color.Lerp(color, Color.Black, 0.2f) : Color.Black;
+            return Circle(color, radius, outlineWidth, outlineColor);
+        }
 
+        // Draws rectangular texture
         public static Texture2D Rect(Color color, int height, int width) {
             Texture2D texture = new Texture2D(graphics, height, width);
             Color[] colors = new Color[height * width];

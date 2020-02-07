@@ -41,10 +41,14 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="Creature.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="MathHelper.cs" />
     <Compile Include="NeuralNet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
