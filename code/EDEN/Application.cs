@@ -2,14 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System;
 
 namespace EDEN {
     public class Application : Game {
         public static MouseState mouse;
         public static GraphicsDeviceManager graphics;
-
-        int number;
 
         SpriteBatch spriteBatch;
 
@@ -36,7 +33,7 @@ namespace EDEN {
 
         protected override void Initialize() {
             layers = new int[] { 4, 2 };
-            
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Textures.Init(this);
 
@@ -57,7 +54,7 @@ namespace EDEN {
                 graphics.PreferredBackBufferWidth = screenSize.X;
                 graphics.PreferredBackBufferHeight = screenSize.Y;
             }
-            
+
             graphics.IsFullScreen = fullscreen;
 
             graphics.ApplyChanges();
@@ -68,7 +65,7 @@ namespace EDEN {
 
             for (int i = 0; i < initialPopulation; i++)
                 creatures.Add(new Creature());
-            
+
             entities.AddRange(creatures);
         }
 
