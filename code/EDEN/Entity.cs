@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace EDEN {
-    public class Entity {
+    public class Entity : Component {
         public Texture2D texture;
 
         public Vector2 position;
@@ -12,11 +12,6 @@ namespace EDEN {
         public Rectangle rect;
 
         public Entity() {}
-
-        public Entity(Texture2D _texture, Vector2 _position) {
-            texture = _texture;
-            position = _position;
-        }
 
         // A position directly in front of the entity, based on current rotation and position
         public Vector2 Forward {
@@ -44,12 +39,11 @@ namespace EDEN {
             return new Rectangle(pos - new Point(width / 2, height / 2), new Point(width, height));
         }
 
-        public virtual void Update() { }
-
-        public virtual void Draw(SpriteBatch spriteBatch) {
+        public override void SuperDraw(SpriteBatch spriteBatch) {
             rect = GetRect();
-
             spriteBatch.Draw(texture, rect, Color.White);
+
+            base.SuperDraw(spriteBatch);
         }
     }
 }

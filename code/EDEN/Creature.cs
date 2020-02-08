@@ -2,10 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EDEN {
     public class Creature : Entity {
@@ -39,9 +35,9 @@ namespace EDEN {
 
             // Creates a circle texture using the colour and radius generated
             Color color = Rand.RandColor();
-            int radius = 15;
+            int radius = 16;
             texture = Textures.Circle(color, radius, 4);
-            eyeTexture = Textures.Circle(Color.Black, radius / 3, radius / 5, Color.White);
+            eyeTexture = Textures.Circle(Color.Black, 2 * radius, radius, Color.White);
 
             scale = 0.2f;
         }
@@ -58,13 +54,20 @@ namespace EDEN {
             if (scale < 1 && growing)
                 scale += 0.005f;
 
+            HandleInput();
+
             // Stays on the screen
             KeepOnScreen();
         }
 
-        public override void Draw(SpriteBatch spriteBatch) {
-            base.Draw(spriteBatch);
+        void HandleInput() {
+            if (Application.mouse.RightButton == ButtonState.Pressed)
+                network = new NeuralNet(Application.layers);
+            if (Application.mouse.LeftButton == ButtonState.Pressed)
+                growing = true;
+        }
 
+        public override void Draw(SpriteBatch spriteBatch) {
             Point leftEyePos = (position + (Forward * (rect.Width * 0.35f)) + (Sideways * (rect.Width * 0.3f))).ToPoint();
             Point rightEyePos = (position + (Forward * (rect.Width * 0.35f)) - (Sideways * (rect.Width * 0.3f))).ToPoint();
             leftEyeRect = new Rectangle(leftEyePos.X - rect.Width / 6, leftEyePos.Y - rect.Height / 6, rect.Width / 3, rect.Height / 3);
