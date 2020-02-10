@@ -1,0 +1,10 @@
+﻿NERMAL
+	- move
+	- network
+		- outputs
+			- forward/backward
+			- turn angle
+
+ENV
+	-food
+	-green

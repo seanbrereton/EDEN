@@ -10,25 +10,30 @@ namespace EDEN {
         List<Food> foods = new List<Food>();
 
         // Settings
-        int initialPopulation = 256;
+        int initialPopulation = 128;
         float foodDensity = 0.25f;
 
         public override void Start() {
+            // Spawn initial population
             for (int i = 0; i < initialPopulation; i++)
                 creatures.Add(new Creature());
 
+            // Spawn starting food (TEMP)
             for (int i = 0; i < (int)(initialPopulation * foodDensity); i++)
                 foods.Add(new Food());
 
+            // Add creatures and foods to components list
             components.AddRange(creatures);
             components.AddRange(foods);
         }
 
         public override void Update() {
             foreach (Creature creature in creatures)
-                foreach (Food food in foods)
+                foreach (Food food in foods) {
+                    // If the creature rect overlaps with the food rect, move the food to a new position (TEMP)
                     if (creature.rect.Contains(food.position))
                         food.position = Rand.Range(Application.screenSize);
+                }
         }
 
     }

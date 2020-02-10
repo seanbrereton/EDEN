@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 namespace EDEN {
     public class Application : Game {
-        public static MouseState mouse;
         public static GraphicsDeviceManager graphics;
 
         SpriteBatch spriteBatch;
@@ -15,7 +14,7 @@ namespace EDEN {
 
         // Display settings
         bool fullscreen = false;
-        Color bgColor = Color.DarkSlateBlue;
+        Color bgColor = Color.DarkOliveGreen;
         public static Vector2 screenSize = new Vector2(1600, 900);
 
         public static int[] layers = new int[] { 4, 2 };
@@ -54,7 +53,7 @@ namespace EDEN {
         }
 
         protected override void Update(GameTime gameTime) {
-            mouse = Mouse.GetState();
+            Input.Update();
 
             foreach (Component component in components)
                 component.SuperUpdate();

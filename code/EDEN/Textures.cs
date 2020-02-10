@@ -44,5 +44,10 @@ namespace EDEN {
             texture.SetData(colors);
             return texture;
         }
+
+        public static Texture2D Merge(Texture2D layer1, Texture layer2, Point position) {
+            // TODO: Method that takes two textures, and a position, and returns a merged texture
+            return layer1;
+        }
     }
 }

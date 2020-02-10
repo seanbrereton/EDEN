@@ -43,31 +43,28 @@ namespace EDEN {
         }
 
         public override void Update() {
-            // Gets inputs, puts them through neural net, sets outputs
+            // Gets inputs, puts them through neural net, sets and uses outputs
             Think();
+            Act();
 
-            // Uses the network outputs to change position and rotation
-            position += Forward * movementVelocity * 10;
-            rotation += rotationVelocity;
-
-            // Adds to scale until fully grown
             if (scale < 1 && growing)
                 scale += 0.005f;
 
             HandleInput();
-
-            // Stays on the screen
             KeepOnScreen();
         }
 
         void HandleInput() {
-            if (Application.mouse.RightButton == ButtonState.Pressed)
+            if (Input.Click(0))
                 network = new NeuralNet(Application.layers);
-            if (Application.mouse.LeftButton == ButtonState.Pressed)
+            if (Input.Click(1))
                 growing = true;
         }
 
         public override void Draw(SpriteBatch spriteBatch) {
+            // This is all bad and complex and temporary.
+            // TODO: Generate the original texture with the eyes, then just draw the texture at the correct angle.
+
             Point leftEyePos = (position + (Forward * (rect.Width * 0.35f)) + (Sideways * (rect.Width * 0.3f))).ToPoint();
             Point rightEyePos = (position + (Forward * (rect.Width * 0.35f)) - (Sideways * (rect.Width * 0.3f))).ToPoint();
             leftEyeRect = new Rectangle(leftEyePos.X - rect.Width / 6, leftEyePos.Y - rect.Height / 6, rect.Width / 3, rect.Height / 3);
@@ -77,6 +74,7 @@ namespace EDEN {
             spriteBatch.Draw(eyeTexture, rightEyeRect, Color.White);
         }
 
+        // (TEMP)
         void KeepOnScreen() {
             // Checks if outside any bounds of the screen
             // Changes position to keep it in the bounds
@@ -92,15 +90,17 @@ namespace EDEN {
         }
 
         void Think() {
-            // Gets inputs from self and surroundings
             float[] inputs = GetInputs();
-
-            // Gets the outputs from the network
             float[] outputs = network.FeedForward(inputs);
 
             // Sets the variables to the outputs from the network
             movementVelocity = outputs[0];
             rotationVelocity = outputs[1];
+        }
+
+        void Act() {
+            position += Forward * movementVelocity * 10;
+            rotation += rotationVelocity;
         }
 
         float[] GetInputs() {
