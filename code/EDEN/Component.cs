@@ -5,6 +5,8 @@ using System.Collections.Generic;
 namespace EDEN {
     public class Component {
 
+        public bool delete;
+
         public List<Component> components = new List<Component>();
 
         public virtual void Start() { }
@@ -15,12 +17,21 @@ namespace EDEN {
                 component.SuperStart();
         }
 
-        public virtual void Update() { }
-        public virtual void SuperUpdate() {
-            Update();
+        public virtual void Update(GameTime gameTime) { }
+        public virtual void SuperUpdate(GameTime gameTime) {
+            Update(gameTime);
 
-            foreach (Component component in components)
-                component.SuperUpdate();
+            List<Component> toDelete = new List<Component>();
+
+            foreach (Component component in components) {
+                if (component.delete)
+                    toDelete.Add(component);
+                
+                component.SuperUpdate(gameTime);
+            }
+
+            foreach (Component component in toDelete)
+                components.Remove(component);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch) { }

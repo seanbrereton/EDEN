@@ -56,7 +56,7 @@ namespace EDEN {
             Input.Update();
 
             foreach (Component component in components)
-                component.SuperUpdate();
+                component.SuperUpdate(gameTime);
 
             base.Update(gameTime);
         }

@@ -17,8 +17,10 @@ namespace EDEN {
         Texture2D eyeTexture;
         Rectangle leftEyeRect;
         Rectangle rightEyeRect;
-
+        //TODO: make energy cap
         public bool growing;
+        public float energy = 20;
+        int radius = 10;
 
         public Creature() {
             // Creates a random neural network, using the applications layer parameters
@@ -35,14 +37,14 @@ namespace EDEN {
 
             // Creates a circle texture using the colour and radius generated
             Color color = Rand.RandColor();
-            int radius = 16;
             texture = Textures.Circle(color, radius, 4);
             eyeTexture = Textures.Circle(Color.Black, 2 * radius, radius, Color.White);
 
             scale = 0.2f;
+
         }
 
-        public override void Update() {
+        public override void Update(GameTime gameTime) {
             // Gets inputs, puts them through neural net, sets and uses outputs
             Think();
             Act();
@@ -50,8 +52,16 @@ namespace EDEN {
             if (scale < 1 && growing)
                 scale += 0.005f;
 
+            energy -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (energy <= 0)
+                Die();
+
             HandleInput();
             KeepOnScreen();
+        }
+
+        void Die() {
+            delete = true;
         }
 
         void HandleInput() {
