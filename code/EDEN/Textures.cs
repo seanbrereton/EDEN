@@ -45,9 +45,29 @@ namespace EDEN {
             return texture;
         }
 
-        public static Texture2D Merge(Texture2D layer1, Texture layer2, Point position) {
-            // TODO: Method that takes two textures, and a position, and returns a merged texture
-            return layer1;
+        public static Texture2D Merge(Texture2D layer1, Texture2D layer2, Point position) {
+            int height = layer1.Height;
+            int width = layer1.Width;
+            Rectangle addedRect = new Rectangle(position, new Point(layer2.Width, layer2.Height));
+            Texture2D texture = new Texture2D(graphics, height, width);
+            Color[] colors = new Color[height * width];
+            Color[] layer1Colors = new Color[height * width];
+            layer1.GetData(layer1Colors);
+            Color[] layer2Colors = new Color[addedRect.Width * addedRect.Height];
+            layer2.GetData(layer2Colors);
+
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    int i = x * width + y;
+                    if (addedRect.Contains(x, y))
+                        colors[i] = layer2Colors[(x + addedRect.X) * addedRect.Width + (y + addedRect.Y)];
+                    else
+                        colors[i] = layer1Colors[i];
+                }
+            }
+
+            texture.SetData(colors);
+            return texture;
         }
     }
 }

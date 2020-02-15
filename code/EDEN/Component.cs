@@ -26,8 +26,8 @@ namespace EDEN {
             foreach (Component component in components) {
                 if (component.delete)
                     toDelete.Add(component);
-                
-                component.SuperUpdate(gameTime);
+                else
+                    component.SuperUpdate(gameTime);
             }
 
             foreach (Component component in toDelete)

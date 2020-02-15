@@ -18,8 +18,7 @@ namespace EDEN {
         Rectangle leftEyeRect;
         Rectangle rightEyeRect;
         //TODO: make energy cap
-        public bool growing;
-        public float energy = 20;
+        public float energy = 5;
         int radius = 10;
 
         public Creature() {
@@ -49,7 +48,7 @@ namespace EDEN {
             Think();
             Act();
 
-            if (scale < 1 && growing)
+            if (scale < 1)
                 scale += 0.005f;
 
             energy -= (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -67,8 +66,6 @@ namespace EDEN {
         void HandleInput() {
             if (Input.Click(0))
                 network = new NeuralNet(Application.layers);
-            if (Input.Click(1))
-                growing = true;
         }
 
         public override void Draw(SpriteBatch spriteBatch) {

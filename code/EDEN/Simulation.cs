@@ -10,7 +10,7 @@ namespace EDEN {
         List<Food> foods = new List<Food>();
 
         // Settings
-        int initialPopulation = 128;
+        int initialPopulation = 256;
         float foodDensity = 0.75f;
 
         public override void Start() {
