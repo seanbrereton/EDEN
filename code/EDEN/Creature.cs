@@ -19,6 +19,7 @@ namespace EDEN {
         Rectangle rightEyeRect;
         //TODO: make energy cap
         public float energy = 5;
+        public float maxEnergy = 10;
         int radius = 10;
 
         public Creature() {
@@ -116,7 +117,8 @@ namespace EDEN {
                 movementVelocity,
                 rotationVelocity,
                 // Normalizes the rotation to be in the range [-1, 1]
-                ((rotation % 360) / 180f) - 1
+                ((rotation % 360) / 180f) - 1,
+                energy / maxEnergy
             };
         }
 

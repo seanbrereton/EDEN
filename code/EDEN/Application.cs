@@ -17,7 +17,7 @@ namespace EDEN {
         Color bgColor = Color.DarkOliveGreen;
         public static Vector2 screenSize = new Vector2(1600, 900);
 
-        public static int[] layers = new int[] { 4, 2 };
+        public static int[] layers = new int[] { 5, 2 };
 
         public Application() {
             graphics = new GraphicsDeviceManager(this);

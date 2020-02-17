@@ -11,7 +11,7 @@ namespace EDEN {
 
         public Rectangle rect;
 
-        public Entity() {}
+        public Entity() { }
 
         // A position directly in front of the entity, based on current rotation and position
         public Vector2 Forward {
@@ -45,5 +45,7 @@ namespace EDEN {
 
             base.SuperDraw(spriteBatch);
         }
+
+        virtual public void Collision(Entity other) {}
     }
 }
