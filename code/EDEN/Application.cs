@@ -12,6 +12,8 @@ namespace EDEN {
 
         List<Component> components = new List<Component>();
 
+        public static Texture2D[] branchTextures = new Texture2D[13];
+
         // Display settings
         bool fullscreen = false;
         Color bgColor = Color.DarkOliveGreen;
@@ -28,6 +30,9 @@ namespace EDEN {
         protected override void Initialize() {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Textures.Init(this);
+
+            for (int i = 0; i < branchTextures.Length; i++)
+                branchTextures[i] = Textures.Rect(Color.Transparent, (int)screenSize.X, (int)screenSize.Y, (int)(Math.Pow(2, i)), Color.Goldenrod);
 
             ConfigureScreen();
 

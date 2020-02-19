@@ -17,10 +17,10 @@ namespace EDEN {
         Texture2D eyeTexture;
         Rectangle leftEyeRect;
         Rectangle rightEyeRect;
-        //TODO: make energy cap
-        public float energy = 5;
-        public float maxEnergy = 10;
-        int radius = 10;
+
+        public float energy = 500;
+        public float maxEnergy = 1000;
+        int radius = 8;
 
         public Creature() {
             // Creates a random neural network, using the applications layer parameters
@@ -56,17 +56,11 @@ namespace EDEN {
             if (energy <= 0)
                 Die();
 
-            HandleInput();
             KeepOnScreen();
         }
 
         void Die() {
             delete = true;
-        }
-
-        void HandleInput() {
-            if (Input.Click(0))
-                network = new NeuralNet(Application.layers);
         }
 
         public override void Draw(SpriteBatch spriteBatch) {

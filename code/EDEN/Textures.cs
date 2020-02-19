@@ -35,14 +35,26 @@ namespace EDEN {
             return Circle(color, radius, outlineWidth, outlineColor);
         }
 
-        // Draws rectangular texture
-        public static Texture2D Rect(Color color, int height, int width) {
-            Texture2D texture = new Texture2D(graphics, height, width);
-            Color[] colors = new Color[height * width];
+        public static Texture2D Rect(Color color, int width, int height, int outlineWidth, Color outlineColor) {
+            Texture2D texture = new Texture2D(graphics, width, height);
+            Color[] colors = new Color[width * height];
 
-            for (int i = 0; i < colors.Length; ++i) colors[i] = color;
-            texture.SetData(colors);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    int i = y * width + x;
+                    if (x < outlineWidth || width - x < outlineWidth || y < outlineWidth || height - y < outlineWidth)
+                        colors[i] = outlineColor;
+                    else
+                        colors[i] = color;
+                }
+            }
+
+            texture.SetData<Color>(colors);
             return texture;
+        }
+        public static Texture2D Rect(Color color, int width, int height, int outlineWidth = 0) {
+            Color outlineColor = outlineWidth > 0 ? Color.Lerp(color, Color.Black, 0.2f) : Color.Black;
+            return Rect(color, width, height, outlineWidth, outlineColor);
         }
 
         public static Texture2D Merge(Texture2D layer1, Texture2D layer2, Point position) {

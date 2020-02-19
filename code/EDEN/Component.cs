@@ -17,9 +17,11 @@ namespace EDEN {
                 component.SuperStart();
         }
 
+        public virtual void HandleInput() { }
         public virtual void Update(GameTime gameTime) { }
         public virtual void SuperUpdate(GameTime gameTime) {
             Update(gameTime);
+            HandleInput();
 
             List<Component> toDelete = new List<Component>();
 
