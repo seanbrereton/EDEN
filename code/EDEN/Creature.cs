@@ -57,8 +57,6 @@ namespace EDEN {
             energy -= (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (energy <= 0)
                 Die();
-
-            KeepOnScreen();
         }
 
         void Die() {

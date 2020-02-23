@@ -13,12 +13,15 @@ namespace EDEN {
         List<Component> childComponents = new List<Component>();
         List<Component> components = new List<Component>();
 
+
         public static Texture2D[] branchTextures = new Texture2D[9];
 
         // Display settings
+        
         bool fullscreen = false;
         Color bgColor = Color.DarkOliveGreen;
         public static Vector2 screenSize = new Vector2(1600, 900);
+        public Camera camera = new Camera();
 
         public static int[] layers = new int[] { 5, 2 };
 
@@ -44,6 +47,7 @@ namespace EDEN {
             activeScene = new Simulation();
             components.Add(activeScene);
             components.Add(quadTree);
+            components.Add(camera);
 
             foreach (Component component in components)
                 component.SuperStart();
@@ -100,7 +104,7 @@ namespace EDEN {
 
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(bgColor);
-            spriteBatch.Begin();
+            spriteBatch.Begin(transformMatrix: camera.Transform);
 
             foreach (Component component in components)
                 component.SuperDraw(spriteBatch);

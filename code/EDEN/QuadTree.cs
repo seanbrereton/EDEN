@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 namespace EDEN {
     class QuadTree : Component {
 
-        bool debug = true;
-
         int maxEntities = 4;
         int maxLevels = 8;
 
@@ -87,17 +85,6 @@ namespace EDEN {
         }
         public List<Entity> Query(Rectangle rect){
             return Query(rect, new List<Entity>());
-        }
-
-        public override void Draw(SpriteBatch spriteBatch) {
-            if (!debug) return;
-
-            spriteBatch.Draw(texture, bounds, Color.White);
-            if (branches[0] != null) {
-                foreach (QuadTree branch in branches) {
-                    branch.Draw(spriteBatch);
-                }
-            }
         }
     }
 }
