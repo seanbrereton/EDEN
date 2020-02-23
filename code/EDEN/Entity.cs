@@ -13,7 +13,9 @@ namespace EDEN {
 
         public bool dynamic;
 
-        public Entity() { }
+        public Entity(Vector2 _position) {
+            position = _position;
+        }
 
         // A position directly in front of the entity, based on current rotation and position
         public Vector2 Forward {

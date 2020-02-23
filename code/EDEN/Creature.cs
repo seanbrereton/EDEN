@@ -22,20 +22,14 @@ namespace EDEN {
         public float maxEnergy = 48;
         int radius = 8;
 
-        public Creature() {
+        public Creature(Vector2 _position) : base(_position) {
             dynamic = true;
 
             // Creates a random neural network, using the applications layer parameters
-            network = new NeuralNet(Application.layers);
+            network = new NeuralNet(Global.layers);
 
             // Random rotation in degrees
             rotation = Rand.Range(360);
-
-            // Starting position is a random space on the screen
-            position = Rand.Range(new Vector2(
-                Application.graphics.PreferredBackBufferWidth,
-                Application.graphics.PreferredBackBufferHeight)
-            );
 
             // Creates a circle texture using the colour and radius generated
             Color color = Rand.RandColor();
@@ -43,7 +37,6 @@ namespace EDEN {
             eyeTexture = Textures.Circle(Color.Black, 2 * radius, radius, Color.White);
 
             scale = 0.2f;
-
         }
 
         public override void Update(GameTime gameTime) {

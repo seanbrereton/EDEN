@@ -26,14 +26,19 @@ namespace EDEN {
 
         public override void HandleInput() {
             //sets up keyboard input for camera control
+            
+            int speedMultiplier = 1;
+            if (Input.Press(Keys.LeftShift, true) || Input.Press(Keys.RightShift, true))
+                speedMultiplier = 2;
+
             if (Input.Press(Keys.W, true) || Input.Press(Keys.Up, true))
-                target.Y -= 5;    
+                target.Y -= 8 * speedMultiplier;    
             if (Input.Press(Keys.S, true) || Input.Press(Keys.Down, true))
-                target.Y += 5;    
+                target.Y += 8 * speedMultiplier;    
             if (Input.Press(Keys.A, true) || Input.Press(Keys.Left, true))
-                target.X -= 5;    
+                target.X -= 8 * speedMultiplier;    
             if (Input.Press(Keys.D, true) || Input.Press(Keys.Right, true))
-                target.X += 5;    
+                target.X += 8 * speedMultiplier;    
         }
     }
 }

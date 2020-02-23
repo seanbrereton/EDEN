@@ -18,12 +18,9 @@ namespace EDEN {
         QuadTree[] branches = new QuadTree[4];
         int level;
 
-        Texture2D texture;
-        
         public QuadTree(Rectangle _bounds, int _level = 0) {
             bounds = _bounds;
             level = _level;
-            texture = Application.branchTextures[level];
         }
 
         public void Clear() {

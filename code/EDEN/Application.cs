@@ -13,17 +13,12 @@ namespace EDEN {
         List<Component> childComponents = new List<Component>();
         List<Component> components = new List<Component>();
 
-
-        public static Texture2D[] branchTextures = new Texture2D[9];
-
         // Display settings
         
         bool fullscreen = false;
         Color bgColor = Color.DarkOliveGreen;
         public static Vector2 screenSize = new Vector2(1600, 900);
         public Camera camera = new Camera();
-
-        public static int[] layers = new int[] { 5, 2 };
 
         QuadTree quadTree;
         Component activeScene;
@@ -38,12 +33,9 @@ namespace EDEN {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Textures.Init(this);
 
-            for (int i = 0; i < branchTextures.Length; i++)
-                branchTextures[i] = Textures.Rect(Color.Transparent, (int)screenSize.X, (int)screenSize.Y, (int)(Math.Pow(2, i)), Color.Goldenrod);
-
             ConfigureScreen();
 
-            quadTree = new QuadTree(new Rectangle(Point.Zero, new Point((int)Application.screenSize.X)));
+            quadTree = new QuadTree(new Rectangle(Point.Zero, new Point((int)screenSize.X)));
             activeScene = new Simulation();
             components.Add(activeScene);
             components.Add(quadTree);
@@ -80,6 +72,11 @@ namespace EDEN {
 
         protected override void Update(GameTime gameTime) {
             Input.Update();
+
+            if (Input.Press(Keys.F)) {
+                fullscreen = !fullscreen;
+                ConfigureScreen();
+            }
 
             foreach (Component component in components)
                 component.SuperUpdate(gameTime);
