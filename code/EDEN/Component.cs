@@ -9,6 +9,18 @@ namespace EDEN {
 
         public List<Component> components = new List<Component>();
 
+        public List<Component> Components {
+            get {
+                List<Component> comps = new List<Component>(components);
+
+                foreach (Component component in components) {
+                    comps.AddRange(component.Components);
+                }
+
+                return comps;
+            }
+        }
+
         public virtual void Start() { }
         public void SuperStart() {
             Start();

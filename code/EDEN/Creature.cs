@@ -17,12 +17,14 @@ namespace EDEN {
         Texture2D eyeTexture;
         Rectangle leftEyeRect;
         Rectangle rightEyeRect;
-
-        public float energy = 500;
-        public float maxEnergy = 1000;
+                    
+        public float energy = 24;
+        public float maxEnergy = 48;
         int radius = 8;
 
         public Creature() {
+            dynamic = true;
+
             // Creates a random neural network, using the applications layer parameters
             network = new NeuralNet(Application.layers);
 
@@ -50,7 +52,7 @@ namespace EDEN {
             Act();
 
             if (scale < 1)
-                scale += 0.005f;
+                scale += 0.002f;
 
             energy -= (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (energy <= 0)
@@ -105,6 +107,10 @@ namespace EDEN {
             rotation += rotationVelocity;
         }
 
+        void Perceive(QuadTree quadTree) {
+
+        }
+
         float[] GetInputs() {
             return new float[] { 
                 1,
@@ -121,6 +127,13 @@ namespace EDEN {
             Point newPos = new Point((int)position.X - size / 2, (int)position.Y - size / 2);
             Point sizePoint = new Point(size, size);
             return new Rectangle(newPos, sizePoint);
+        }
+
+        public override void Collides(Entity other) {
+            if (other is Food) {
+                energy += 1;
+                other.position = Rand.Range(Application.screenSize);
+            }
         }
     }
 }

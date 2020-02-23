@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace EDEN {
-    class QuadTree {
+    class QuadTree : Component {
 
-        int maxEntities = 2;
-        int maxLevels = 12;
+        bool debug = true;
+
+        int maxEntities = 4;
+        int maxLevels = 8;
 
         List<Entity> entities = new List<Entity>();
         Rectangle bounds;
@@ -86,7 +89,9 @@ namespace EDEN {
             return Query(rect, new List<Entity>());
         }
 
-        public void Draw(SpriteBatch spriteBatch) {
+        public override void Draw(SpriteBatch spriteBatch) {
+            if (!debug) return;
+
             spriteBatch.Draw(texture, bounds, Color.White);
             if (branches[0] != null) {
                 foreach (QuadTree branch in branches) {
@@ -94,6 +99,5 @@ namespace EDEN {
                 }
             }
         }
-
     }
 }
