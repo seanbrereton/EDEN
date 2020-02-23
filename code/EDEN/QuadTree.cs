@@ -10,17 +10,22 @@ using System.Threading.Tasks;
 namespace EDEN {
     class QuadTree : Component {
 
-        int maxEntities = 4;
+        int maxEntities = 2;
         int maxLevels = 8;
 
         List<Entity> entities = new List<Entity>();
         Rectangle bounds;
         QuadTree[] branches = new QuadTree[4];
         int level;
+        
+        Texture2D texture;
+
 
         public QuadTree(Rectangle _bounds, int _level = 0) {
             bounds = _bounds;
             level = _level;
+            texture = Application.branchTextures[level];
+
         }
 
         public void Clear() {
@@ -82,6 +87,16 @@ namespace EDEN {
         }
         public List<Entity> Query(Rectangle rect){
             return Query(rect, new List<Entity>());
+        }
+
+        public override void Draw(SpriteBatch spriteBatch) {
+            spriteBatch.Draw(texture, bounds, Color.White);
+            if (branches[0] != null) {
+                foreach (QuadTree branch in branches) {
+                    branch.Draw(spriteBatch);
+                }
+            }
+
         }
     }
 }

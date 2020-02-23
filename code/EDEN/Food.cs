@@ -2,14 +2,7 @@
 using System;
 namespace EDEN {
     public class Food : Entity {
-        public Food() {
-
-            //chooses position for food
-            position = Rand.Range(new Vector2(
-                Application.graphics.PreferredBackBufferWidth,
-                Application.graphics.PreferredBackBufferHeight)
-            );
-
+        public Food(Vector2 _position) : base(_position) {
             //food attributes
             Color color = Color.Beige;
             int height = 5;

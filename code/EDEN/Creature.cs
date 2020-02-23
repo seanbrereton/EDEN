@@ -123,7 +123,7 @@ namespace EDEN {
         public override void Collides(Entity other) {
             if (other is Food) {
                 energy += 1;
-                other.position = Rand.Range(Application.screenSize);
+                other.position = Rand.Range(Global.worldSize.ToVector2());
             }
         }
     }

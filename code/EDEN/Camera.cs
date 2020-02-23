@@ -8,6 +8,8 @@ namespace EDEN {
         //center camera
         Vector2 target = new Vector2(800, 450);
 
+        float zoomLevel = 1;
+
         public Matrix Transform { get; private set; }
 
         public override void Update(GameTime gameTime) {
@@ -21,7 +23,11 @@ namespace EDEN {
                 Application.screenSize.Y / 2,
                 0);
 
-            Transform = position * offset;
+            var zoom = Matrix.CreateScale(
+                zoomLevel, zoomLevel, 1
+            );
+
+            Transform = position * offset * zoom;
         }
 
         public override void HandleInput() {
@@ -38,7 +44,12 @@ namespace EDEN {
             if (Input.Press(Keys.A, true) || Input.Press(Keys.Left, true))
                 target.X -= 8 * speedMultiplier;    
             if (Input.Press(Keys.D, true) || Input.Press(Keys.Right, true))
-                target.X += 8 * speedMultiplier;    
+                target.X += 8 * speedMultiplier;
+
+            if (Input.Press(Keys.OemPlus, true))
+                zoomLevel *= 1.02f;
+            if (Input.Press(Keys.OemMinus, true))
+                zoomLevel *= 0.98f;
         }
     }
 }

@@ -23,6 +23,8 @@ namespace EDEN {
         QuadTree quadTree;
         Component activeScene;
 
+        public static Texture2D[] branchTextures = new Texture2D[9];
+
         public Application() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -35,7 +37,11 @@ namespace EDEN {
 
             ConfigureScreen();
 
-            quadTree = new QuadTree(new Rectangle(Point.Zero, new Point((int)screenSize.X)));
+            for (int i = 0; i < branchTextures.Length; i++)
+                branchTextures[i] = Textures.Rect(Color.Transparent, Global.worldSize.X, Global.worldSize.Y, (int)(Math.Pow(2, i)), Color.Goldenrod);
+
+
+            quadTree = new QuadTree(new Rectangle(Point.Zero, Global.worldSize));
             activeScene = new Simulation();
             components.Add(activeScene);
             components.Add(quadTree);
