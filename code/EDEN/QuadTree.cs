@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace EDEN {
-    class QuadTree : Component {
+    public class QuadTree : Component {
 
         int maxEntities = 2;
         int maxLevels = 8;
@@ -90,12 +90,12 @@ namespace EDEN {
         }
 
         public override void Draw(SpriteBatch spriteBatch) {
-            spriteBatch.Draw(texture, bounds, Color.White);
+            /*spriteBatch.Draw(texture, bounds, Color.White);
             if (branches[0] != null) {
                 foreach (QuadTree branch in branches) {
                     branch.Draw(spriteBatch);
                 }
-            }
+            }*/
 
         }
     }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
+using System.Collections.Generic;
 
 namespace EDEN {
     public class Creature : Entity {
@@ -9,6 +8,9 @@ namespace EDEN {
         public NeuralNet network;
 
         public float scale;
+
+        // Network Inputs
+        int[] seen = new int[3];
 
         // Network Outputs
         float rotationVelocity;
@@ -21,6 +23,9 @@ namespace EDEN {
         public float energy = 24;
         public float maxEnergy = 48;
         int radius = 8;
+
+        Rectangle visionRect;
+        int viewSize = 32;
 
         public Creature(Vector2 _position) : base(_position) {
             dynamic = true;
@@ -37,10 +42,13 @@ namespace EDEN {
             eyeTexture = Textures.Circle(Color.Black, 2 * radius, radius, Color.White);
 
             scale = 0.2f;
+
+            visionRect = new Rectangle(Point.Zero, new Point(viewSize));
         }
 
         public override void Update(GameTime gameTime) {
             // Gets inputs, puts them through neural net, sets and uses outputs
+            Perceive();
             Think();
             Act();
 
@@ -50,6 +58,29 @@ namespace EDEN {
             energy -= (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (energy <= 0)
                 Die();
+        }
+
+        void Perceive() {
+            visionRect.Location = (position + Forward * viewSize).ToPoint();
+            visionRect.Offset(-viewSize / 2, -viewSize / 2);
+            List<Entity> seen = Application.quadTree.Query(visionRect);
+            foreach (Entity entity in seen)
+                if (entity is Food && visionRect.Intersects(entity.rect))
+                    entity.delete = false;
+
+            visionRect.Location = (position + Sideways * viewSize).ToPoint();
+            visionRect.Offset(-viewSize / 2, -viewSize / 2);
+            seen = Application.quadTree.Query(visionRect);
+            foreach (Entity entity in seen)
+                if (entity is Food && visionRect.Intersects(entity.rect))
+                    entity.delete = false;
+
+            visionRect.Location = (position - Sideways * viewSize).ToPoint();
+            visionRect.Offset(-viewSize / 2, -viewSize / 2);
+            seen = Application.quadTree.Query(visionRect);
+            foreach (Entity entity in seen)
+                if (entity is Food && visionRect.Intersects(entity.rect))
+                    entity.delete = false;
         }
 
         void Die() {
@@ -95,11 +126,7 @@ namespace EDEN {
 
         void Act() {
             position += Forward * movementVelocity * 10;
-            rotation += rotationVelocity;
-        }
-
-        void Perceive(QuadTree quadTree) {
-
+            rotation += rotationVelocity * 8;
         }
 
         float[] GetInputs() {

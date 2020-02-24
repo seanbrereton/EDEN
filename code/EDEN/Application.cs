@@ -20,7 +20,7 @@ namespace EDEN {
         public static Vector2 screenSize = new Vector2(1600, 900);
         public Camera camera = new Camera();
 
-        QuadTree quadTree;
+        public static QuadTree quadTree;
         Component activeScene;
 
         public static Texture2D[] branchTextures = new Texture2D[9];

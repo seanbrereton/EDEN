@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace EDEN {
     public static class Input {
@@ -16,6 +17,12 @@ namespace EDEN {
             keyboard = Keyboard.GetState();
         }
 
+        public static Point mousePos {
+            get {
+                return mouse.Position;
+            }
+        }
+        
         public static bool Click(int button=0, bool held=false) {
             ButtonState now = button == 0 ? mouse.LeftButton : mouse.RightButton;
             ButtonState then = button == 0 ? prevMouse.LeftButton : prevMouse.RightButton;
