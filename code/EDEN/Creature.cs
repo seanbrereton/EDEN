@@ -54,7 +54,7 @@ namespace EDEN {
             // Gets inputs, puts them through neural net, sets and uses outputs
             Perceive();
             Think();
-            // Act();
+            Act();
 
             if (scale < 1)
                 scale += 0.002f;

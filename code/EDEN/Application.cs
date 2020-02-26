@@ -9,21 +9,12 @@ namespace EDEN {
         public static GraphicsDeviceManager graphics;
 
         SpriteBatch spriteBatch;
+        SpriteBatch UIspriteBatch;
 
-        List<Component> childComponents = new List<Component>();
-        List<Component> components = new List<Component>();
-
-        // Display settings
-        
         bool fullscreen = false;
-        Color bgColor = Color.DarkOliveGreen;
         public static Vector2 screenSize = new Vector2(1600, 900);
-        public Camera camera = new Camera();
 
-        public static QuadTree quadTree;
-        Simulation simulation;
-
-        public static Texture2D[] branchTextures = new Texture2D[9];
+        State activeState;
 
         public Application() {
             graphics = new GraphicsDeviceManager(this);
@@ -33,34 +24,15 @@ namespace EDEN {
 
         protected override void Initialize() {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            UIspriteBatch = new SpriteBatch(GraphicsDevice);
             Textures.Init(this);
-
             ConfigureScreen();
 
-            for (int i = 0; i < branchTextures.Length; i++)
-                branchTextures[i] = Textures.Rect(Color.Transparent, Global.worldSize.X, Global.worldSize.Y, (int)(Math.Pow(2, i)), Color.Goldenrod);
-
-
-            quadTree = new QuadTree(new Rectangle(Point.Zero, Global.worldSize));
-            simulation = new Simulation();
-            //components.Add(simulation);
-            components.Add(quadTree);
-            components.Add(camera);
-
-            foreach (Component component in components)
-                component.SuperStart();
+            activeState = new Simulation(this);
+            
+            activeState.SuperStart();
 
             base.Initialize();
-        }
-
-        void CreateQuadTree() {
-            // Constructs quad tree, and gets all components from the current scene
-            quadTree.Clear();
-            childComponents = simulation.Components;
-            foreach (Component component in childComponents) {
-                if (component is Entity)
-                    quadTree.Insert((Entity)component);
-            }
         }
 
         void ConfigureScreen() {
@@ -77,46 +49,14 @@ namespace EDEN {
         }
 
         protected override void Update(GameTime gameTime) {
-            Input.Update();
-
-            if (Input.Press(Keys.F)) {
-                fullscreen = !fullscreen;
-                ConfigureScreen();
-            }
-            if (Input.Press(Keys.N) && !simulation.running) {
-                components.Add(simulation);
-                simulation.Start();
-            }
-
-            foreach (Component component in components)
-                component.SuperUpdate(gameTime);
-
-            // Uses the quad tree to find all collisions between entities
-            CreateQuadTree();
-            foreach (Component component in childComponents) {
-                if (component is Entity) {
-                    Entity entity = (Entity)component;
-                    if (entity.dynamic) {
-                        List<Entity> entities = quadTree.Query(entity.rect);
-                        foreach (Entity other in entities) {
-                            if (entity.rect.Intersects(other.rect) && !entity.Equals(other))
-                                entity.Collides(other);
-                        }
-                    }
-                }
-            }
+            activeState.SuperUpdate(gameTime);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(bgColor);
-            spriteBatch.Begin(transformMatrix: camera.Transform);
+            activeState.SuperDraw(spriteBatch, UIspriteBatch);
 
-            foreach (Component component in components)
-                component.SuperDraw(spriteBatch);
-
-            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

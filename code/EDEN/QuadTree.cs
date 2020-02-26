@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace EDEN {
-    public class QuadTree : Component {
+    public class QuadTree {
 
         int maxEntities = 2;
         int maxLevels = 8;
@@ -26,6 +26,27 @@ namespace EDEN {
             level = _level;
             texture = Application.branchTextures[level];
 
+        }
+
+        public void CheckCollisions() {
+            foreach (Entity entity in entities) {
+                if (entity.dynamic) {
+                    List<Entity> near = quadTree.Query(entity.rect);
+                    foreach (Entity other in near) {
+                        if (entity.rect.Intersects(other.rect) && !entity.Equals(other))
+                            entity.Collides(other);
+                    }
+                }
+            }
+        }
+
+        public void Update(List<Component> components) {
+            Clear();
+
+            foreach (Component component in components) {
+                if (component is Entity)
+                    Insert(component);
+            }
         }
 
         public void Clear() {
@@ -89,7 +110,7 @@ namespace EDEN {
             return Query(rect, new List<Entity>());
         }
 
-        public override void Draw(SpriteBatch spriteBatch) {
+        public void Draw(SpriteBatch spriteBatch) {
             spriteBatch.Draw(texture, bounds, Color.White);
             if (branches[0] != null) {
                 foreach (QuadTree branch in branches) {

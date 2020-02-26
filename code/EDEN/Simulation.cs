@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework.Input;
 
 namespace EDEN {
-    class Simulation : Component {
+    class Simulation : State {
 
         // Settings
-        int initialPopulation = 0;
+        int initialPopulation = 50;
         float foodDensity = 0.8f;
 
         public bool running = false;

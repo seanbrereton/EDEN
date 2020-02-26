@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace EDEN {
     public class Component {
 
+        public bool UI;
         public bool delete;
 
         public List<Component> components = new List<Component>();
@@ -13,9 +14,8 @@ namespace EDEN {
             get {
                 List<Component> comps = new List<Component>(components);
 
-                foreach (Component component in components) {
+                foreach (Component component in components)
                     comps.AddRange(component.Components);
-                }
 
                 return comps;
             }
@@ -49,11 +49,11 @@ namespace EDEN {
         }
 
         public virtual void Draw(SpriteBatch spriteBatch) { }
-        public virtual void SuperDraw(SpriteBatch spriteBatch) {
-            Draw(spriteBatch);
+        public virtual void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
+            Draw(UI ? UIspriteBatch : spriteBatch);
 
             foreach (Component component in components)
-                component.SuperDraw(spriteBatch);
+                component.SuperDraw(spriteBatch, UIspriteBatch);
         }
 
     }
