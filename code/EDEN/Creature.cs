@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace EDEN {
@@ -10,11 +11,13 @@ namespace EDEN {
         public float scale;
 
         // Network Inputs
-        int[] seen = new int[3];
+        float[] foodSeen = new float[3];
+        float[] creaturesSeen = new float[3];
 
         // Network Outputs
         float rotationVelocity;
         float movementVelocity;
+        float toEat;
 
         Texture2D eyeTexture;
         Rectangle leftEyeRect;
@@ -24,7 +27,7 @@ namespace EDEN {
         public float maxEnergy = 48;
         int radius = 8;
 
-        Rectangle visionRect;
+        Rectangle[] visionRects = new Rectangle[3];
         int viewSize = 32;
 
         public Creature(Vector2 _position) : base(_position) {
@@ -43,14 +46,15 @@ namespace EDEN {
 
             scale = 0.2f;
 
-            visionRect = new Rectangle(Point.Zero, new Point(viewSize));
+            for (int i = 0; i < visionRects.Length; i++)
+                visionRects[i] = new Rectangle(Point.Zero, new Point(viewSize));
         }
 
         public override void Update(GameTime gameTime) {
             // Gets inputs, puts them through neural net, sets and uses outputs
             Perceive();
             Think();
-            Act();
+            // Act();
 
             if (scale < 1)
                 scale += 0.002f;
@@ -61,26 +65,41 @@ namespace EDEN {
         }
 
         void Perceive() {
-            visionRect.Location = (position + Forward * viewSize).ToPoint();
-            visionRect.Offset(-viewSize / 2, -viewSize / 2);
-            List<Entity> seen = Application.quadTree.Query(visionRect);
-            foreach (Entity entity in seen)
-                if (entity is Food && visionRect.Intersects(entity.rect))
-                    entity.delete = false;
+            foodSeen = new float[3];
+            creaturesSeen = new float[3];
+            int totalFoodSeen = 0;
+            int totalCreaturesSeen = 0;
 
-            visionRect.Location = (position + Sideways * viewSize).ToPoint();
-            visionRect.Offset(-viewSize / 2, -viewSize / 2);
-            seen = Application.quadTree.Query(visionRect);
-            foreach (Entity entity in seen)
-                if (entity is Food && visionRect.Intersects(entity.rect))
-                    entity.delete = false;
+            visionRects[0].Location = (position + Forward * viewSize).ToPoint();
+            visionRects[1].Location = (position + Sideways * viewSize).ToPoint();
+            visionRects[2].Location = (position - Sideways * viewSize).ToPoint();
 
-            visionRect.Location = (position - Sideways * viewSize).ToPoint();
-            visionRect.Offset(-viewSize / 2, -viewSize / 2);
-            seen = Application.quadTree.Query(visionRect);
-            foreach (Entity entity in seen)
-                if (entity is Food && visionRect.Intersects(entity.rect))
-                    entity.delete = false;
+            for (int i = 0; i < visionRects.Length; i++) {
+                visionRects[i].Offset(-viewSize / 2, -viewSize / 2);
+                List<Entity> seen = Application.quadTree.Query(visionRects[i]);
+                foreach (Entity entity in seen) {
+                    if (visionRects[i].Intersects(entity.rect)) {
+                        if (entity is Food) {
+                            foodSeen[i] += 1;
+                            totalFoodSeen += 1;
+                        } else if (entity is Creature) {
+                            creaturesSeen[i] += 1;
+                            totalCreaturesSeen += 1;
+                        }
+                    }
+                }
+            }
+
+            if (totalFoodSeen > 0) {
+                for (int i = 0; i < foodSeen.Length; i++)
+                    foodSeen[i] = foodSeen[i] / totalFoodSeen;
+            }
+
+            if (totalCreaturesSeen > 0) {
+                for (int i = 0; i < creaturesSeen.Length; i++)
+                    creaturesSeen[i] = creaturesSeen[i] / totalCreaturesSeen;
+            }
+
         }
 
         void Die() {
@@ -122,6 +141,7 @@ namespace EDEN {
             // Sets the variables to the outputs from the network
             movementVelocity = outputs[0];
             rotationVelocity = outputs[1];
+            toEat = outputs[2];
         }
 
         void Act() {
@@ -136,7 +156,13 @@ namespace EDEN {
                 rotationVelocity,
                 // Normalizes the rotation to be in the range [-1, 1]
                 ((rotation % 360) / 180f) - 1,
-                energy / maxEnergy
+                energy / maxEnergy,
+                foodSeen[0],
+                foodSeen[1],
+                foodSeen[2],
+                creaturesSeen[0],
+                creaturesSeen[1],
+                creaturesSeen[2]
             };
         }
 
@@ -148,7 +174,7 @@ namespace EDEN {
         }
 
         public override void Collides(Entity other) {
-            if (other is Food) {
+            if (other is Food && energy <= maxEnergy - 1 && toEat > 0) {
                 energy += 1;
                 other.position = Rand.Range(Global.worldSize.ToVector2());
             }

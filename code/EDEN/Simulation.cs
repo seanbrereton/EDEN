@@ -5,10 +5,14 @@ namespace EDEN {
     class Simulation : Component {
 
         // Settings
-        int initialPopulation = 1024;
-        float foodDensity = 0.4f;
+        int initialPopulation = 0;
+        float foodDensity = 0.8f;
+
+        public bool running = false;
 
         public override void Start() {
+            running = true;
+
             // Spawn starting food (TEMP)
             for (int i = 0; i < (int)(initialPopulation * foodDensity); i++)
                 components.Add(new Food(Rand.Range(Global.worldSize.ToVector2())));

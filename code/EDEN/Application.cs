@@ -21,7 +21,7 @@ namespace EDEN {
         public Camera camera = new Camera();
 
         public static QuadTree quadTree;
-        Component activeScene;
+        Simulation simulation;
 
         public static Texture2D[] branchTextures = new Texture2D[9];
 
@@ -42,8 +42,8 @@ namespace EDEN {
 
 
             quadTree = new QuadTree(new Rectangle(Point.Zero, Global.worldSize));
-            activeScene = new Simulation();
-            components.Add(activeScene);
+            simulation = new Simulation();
+            //components.Add(simulation);
             components.Add(quadTree);
             components.Add(camera);
 
@@ -56,7 +56,7 @@ namespace EDEN {
         void CreateQuadTree() {
             // Constructs quad tree, and gets all components from the current scene
             quadTree.Clear();
-            childComponents = activeScene.Components;
+            childComponents = simulation.Components;
             foreach (Component component in childComponents) {
                 if (component is Entity)
                     quadTree.Insert((Entity)component);
@@ -82,6 +82,10 @@ namespace EDEN {
             if (Input.Press(Keys.F)) {
                 fullscreen = !fullscreen;
                 ConfigureScreen();
+            }
+            if (Input.Press(Keys.N) && !simulation.running) {
+                components.Add(simulation);
+                simulation.Start();
             }
 
             foreach (Component component in components)
