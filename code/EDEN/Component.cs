@@ -22,7 +22,7 @@ namespace EDEN {
         }
 
         public virtual void Start() { }
-        public void SuperStart() {
+        public virtual void SuperStart() {
             Start();
 
             foreach (Component component in components)

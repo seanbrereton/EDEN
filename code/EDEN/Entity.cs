@@ -43,11 +43,11 @@ namespace EDEN {
             return new Rectangle(pos - new Point(width / 2, height / 2), new Point(width, height));
         }
 
-        public override void SuperDraw(SpriteBatch spriteBatch) {
+        public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
             rect = GetRect();
-            spriteBatch.Draw(texture, rect, Color.White);
+            (UI ? UIspriteBatch : spriteBatch).Draw(texture, rect, Color.White);
 
-            base.SuperDraw(spriteBatch);
+            base.SuperDraw(spriteBatch, UIspriteBatch);
         }
 
         virtual public void Collides(Entity other) {}

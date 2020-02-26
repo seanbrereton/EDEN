@@ -20,18 +20,16 @@ namespace EDEN {
         
         Texture2D texture;
 
-
         public QuadTree(Rectangle _bounds, int _level = 0) {
             bounds = _bounds;
             level = _level;
-            texture = Application.branchTextures[level];
 
         }
 
         public void CheckCollisions() {
             foreach (Entity entity in entities) {
                 if (entity.dynamic) {
-                    List<Entity> near = quadTree.Query(entity.rect);
+                    List<Entity> near = Query(entity.rect);
                     foreach (Entity other in near) {
                         if (entity.rect.Intersects(other.rect) && !entity.Equals(other))
                             entity.Collides(other);
@@ -45,7 +43,7 @@ namespace EDEN {
 
             foreach (Component component in components) {
                 if (component is Entity)
-                    Insert(component);
+                    Insert((Entity)component);
             }
         }
 
@@ -110,14 +108,5 @@ namespace EDEN {
             return Query(rect, new List<Entity>());
         }
 
-        public void Draw(SpriteBatch spriteBatch) {
-            spriteBatch.Draw(texture, bounds, Color.White);
-            if (branches[0] != null) {
-                foreach (QuadTree branch in branches) {
-                    branch.Draw(spriteBatch);
-                }
-            }
-
-        }
     }
 }

@@ -5,13 +5,17 @@ namespace EDEN {
     class Simulation : State {
 
         // Settings
-        int initialPopulation = 50;
-        float foodDensity = 0.8f;
+        int initialPopulation = 512;
+        float foodDensity = 1.6f;
 
         public bool running = false;
 
+        public Simulation(Application _app) : base(_app) {
+            quadTree = new QuadTree(new Rectangle(Point.Zero, Global.worldSize));
+        }
+
         public override void Start() {
-            running = true;
+            bgColor = Color.DarkOliveGreen;
 
             // Spawn starting food (TEMP)
             for (int i = 0; i < (int)(initialPopulation * foodDensity); i++)

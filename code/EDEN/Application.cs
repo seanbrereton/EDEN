@@ -14,7 +14,7 @@ namespace EDEN {
         bool fullscreen = false;
         public static Vector2 screenSize = new Vector2(1600, 900);
 
-        State activeState;
+        public static State activeState;
 
         public Application() {
             graphics = new GraphicsDeviceManager(this);
@@ -28,11 +28,16 @@ namespace EDEN {
             Textures.Init(this);
             ConfigureScreen();
 
-            activeState = new Simulation(this);
+            activeState = new MainMenu(this);
             
             activeState.SuperStart();
 
             base.Initialize();
+        }
+
+        public void SwitchState(State state) {
+            activeState = state;
+            activeState.SuperStart();
         }
 
         void ConfigureScreen() {
@@ -50,6 +55,11 @@ namespace EDEN {
 
         protected override void Update(GameTime gameTime) {
             activeState.SuperUpdate(gameTime);
+
+            if (Input.Press(Keys.F)) {
+                fullscreen = !fullscreen;
+                ConfigureScreen();
+            }
 
             base.Update(gameTime);
         }

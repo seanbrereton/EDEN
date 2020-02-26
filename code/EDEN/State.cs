@@ -4,24 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace EDEN {
-    class State : Component {
+    public class State : Component {
 
-        Application app;
+        public Application app;
         Camera camera = new Camera();
-        Color bgColor;
-        QuadTree quadTree;
+        public Color bgColor;
+        public QuadTree quadTree;
 
         public State(Application _app) {
             app = _app;
         }
 
+        public override void SuperStart() {
+            components.Add(camera);
+
+            base.SuperStart();
+        }
+
         public override void SuperUpdate(GameTime gameTime) {
             Input.Update();
 
-            quadTree.Create(Components);
-            quadTree.CheckCollisions();
+            quadTree?.Update(Components);
+            quadTree?.CheckCollisions();
 
             base.SuperUpdate(gameTime);
         }

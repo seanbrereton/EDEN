@@ -76,7 +76,7 @@ namespace EDEN {
 
             for (int i = 0; i < visionRects.Length; i++) {
                 visionRects[i].Offset(-viewSize / 2, -viewSize / 2);
-                List<Entity> seen = Application.quadTree.Query(visionRects[i]);
+                List<Entity> seen = Application.activeState.quadTree.Query(visionRects[i]);
                 foreach (Entity entity in seen) {
                     if (visionRects[i].Intersects(entity.rect)) {
                         if (entity is Food) {
