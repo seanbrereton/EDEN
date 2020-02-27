@@ -67,11 +67,7 @@ namespace EDEN {
             energy -= deltaTime * (1 + Math.Abs(movement));
 
             if (energy <= 0)
-                Die();
-        }
-
-        void Die() {
-            delete = true;
+                Remove();
         }
 
         void Think() {
@@ -141,10 +137,15 @@ namespace EDEN {
                     creaturesSeen[i] = creaturesSeen[i] / totalCreaturesSeen;
         }
 
+        public override void HandleInput() {
+            if (Input.Press(Microsoft.Xna.Framework.Input.Keys.N))
+                parent.AddComponent(new Creature(position));
+        }
+
         public override void Collides(Entity other) {
             if (other is Food) {
                 touchingFood = 1;
-                if (energy <= maxEnergy - 1 && toEat > 0.5) {
+                if (energy <= maxEnergy - 1) {
                     energy += 1;
                     other.position = Rand.Range(Global.worldSize.ToVector2());
                 }

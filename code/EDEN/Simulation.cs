@@ -19,24 +19,24 @@ namespace EDEN {
 
             // Spawn starting food (TEMP)
             for (int i = 0; i < (int)(initialPopulation * foodDensity); i++)
-                components.Add(new Food(Rand.Range(Global.worldSize.ToVector2())));
+                AddComponent(new Food(Rand.Range(Global.worldSize.ToVector2())));
             
             // Spawn initial population
             for (int i = 0; i < initialPopulation; i++)
-                components.Add(new Creature(Rand.Range(Global.worldSize.ToVector2())));
+                AddComponent(new Creature(Rand.Range(Global.worldSize.ToVector2())));
         }
 
         public override void HandleInput() {
             if (Input.Click(0, true))
                 if (Input.Press(Keys.LeftShift, true))
                     for (int x = 0; x < 16; x++)
-                        components.Add(new Food(Input.MouseWorldPos.ToVector2() + Rand.Range(new Vector2(-32), new Vector2(32))));
+                        AddComponent(new Food(Input.MouseWorldPos.ToVector2() + Rand.Range(new Vector2(-32), new Vector2(32))));
                 else
-                    components.Add(new Food(Input.MouseWorldPos.ToVector2()));
+                    AddComponent(new Food(Input.MouseWorldPos.ToVector2()));
 
             if (Input.Click(1))
                 for (int i = 0; i < 1; i++)
-                    components.Add(new Creature(Input.MouseWorldPos.ToVector2()));
+                    AddComponent(new Creature(Input.MouseWorldPos.ToVector2()));
 
             if (Input.Press(Keys.Q))
                 debug = !debug;

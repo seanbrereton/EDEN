@@ -20,7 +20,7 @@ namespace EDEN {
         }
 
         public override void SuperStart() {
-            components.Add(camera);
+            AddComponent(camera);
             Input.Initialize(camera);
 
             base.SuperStart();

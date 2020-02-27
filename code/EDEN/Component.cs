@@ -6,9 +6,11 @@ namespace EDEN {
     public class Component {
 
         public bool UI;
-        public bool delete;
 
+        public Component parent;
         public List<Component> components = new List<Component>();
+        public List<Component> toAdd = new List<Component>();
+        public List<Component> toRemove = new List<Component>();
 
         public List<Component> GetChildComponents() {
             List<Component> childComponents = new List<Component>(components);
@@ -17,6 +19,15 @@ namespace EDEN {
                 childComponents.AddRange(component.GetChildComponents());
 
             return childComponents;
+        }
+
+        public void Remove() {
+            parent.toRemove.Add(this);
+        }
+
+        public void AddComponent(Component component) {
+            component.parent = this;
+            toAdd.Add(component);
         }
 
         public virtual void Start() { }
@@ -33,17 +44,15 @@ namespace EDEN {
             Update(deltaTime);
             HandleInput();
 
-            List<Component> toDelete = new List<Component>();
-
-            foreach (Component component in components) {
-                if (component.delete)
-                    toDelete.Add(component);
-                else
-                    component.SuperUpdate(deltaTime);
-            }
-
-            foreach (Component component in toDelete)
+            foreach (Component component in toRemove)
                 components.Remove(component);
+            foreach (Component component in toAdd)
+                components.Add(component);
+            toRemove.Clear();
+            toAdd.Clear();
+
+            foreach (Component component in components)
+                component.SuperUpdate(deltaTime);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch) { }
