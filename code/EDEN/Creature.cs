@@ -8,28 +8,25 @@ namespace EDEN {
 
         public NeuralNet network;
 
-        public float scale;
-
         // Network Inputs
         float[] foodSeen = new float[3];
         float[] creaturesSeen = new float[3];
 
         // Network Outputs
-        float rotationVelocity;
-        float movementVelocity;
+        float turning;
+        float movement;
         float toEat;
 
+        public float energy = 12;
+        public float maxEnergy = 24;
+        int viewSize = 32;
+        Rectangle[] visionRects = new Rectangle[3];
+
+        int radius = 12;
         Texture2D eyeTexture;
         Rectangle leftEyeRect;
         Rectangle rightEyeRect;
                     
-        public float energy = 24;
-        public float maxEnergy = 48;
-        int radius = 8;
-
-        Rectangle[] visionRects = new Rectangle[3];
-        int viewSize = 32;
-
         public Creature(Vector2 _position) : base(_position) {
             dynamic = true;
 
@@ -39,9 +36,8 @@ namespace EDEN {
             // Random rotation in degrees
             rotation = Rand.Range(360);
 
-            // Creates a circle texture using the colour and radius generated
-            Color color = Rand.RandColor();
-            texture = Textures.Circle(color, radius, 4);
+            color = Rand.RandColor();
+            texture = Textures.Circle(Color.White, radius, 4);
             eyeTexture = Textures.Circle(Color.Black, 2 * radius, radius, Color.White);
 
             scale = 0.2f;
@@ -71,8 +67,8 @@ namespace EDEN {
             int totalCreaturesSeen = 0;
 
             visionRects[0].Location = (position + Forward * viewSize).ToPoint();
-            visionRects[1].Location = (position + Sideways * viewSize).ToPoint();
-            visionRects[2].Location = (position - Sideways * viewSize).ToPoint();
+            visionRects[1].Location = (position + Right * viewSize).ToPoint();
+            visionRects[2].Location = (position - Right * viewSize).ToPoint();
 
             for (int i = 0; i < visionRects.Length; i++) {
                 visionRects[i].Offset(-viewSize / 2, -viewSize / 2);
@@ -110,8 +106,8 @@ namespace EDEN {
             // This is all bad and complex and temporary.
             // TODO: Generate the original texture with the eyes, then just draw the texture at the correct angle.
 
-            Point leftEyePos = (position + (Forward * (rect.Width * 0.35f)) + (Sideways * (rect.Width * 0.3f))).ToPoint();
-            Point rightEyePos = (position + (Forward * (rect.Width * 0.35f)) - (Sideways * (rect.Width * 0.3f))).ToPoint();
+            Point leftEyePos = (position + (Forward * (rect.Width * 0.35f)) + (Right * (rect.Width * 0.3f))).ToPoint();
+            Point rightEyePos = (position + (Forward * (rect.Width * 0.35f)) - (Right * (rect.Width * 0.3f))).ToPoint();
             leftEyeRect = new Rectangle(leftEyePos.X - rect.Width / 6, leftEyePos.Y - rect.Height / 6, rect.Width / 3, rect.Height / 3);
             rightEyeRect = new Rectangle(rightEyePos.X - rect.Width / 6, rightEyePos.Y - rect.Height / 6, rect.Width / 3, rect.Height / 3);
 
@@ -119,43 +115,26 @@ namespace EDEN {
             spriteBatch.Draw(eyeTexture, rightEyeRect, Color.White);
         }
 
-        // (TEMP)
-        void KeepOnScreen() {
-            // Checks if outside any bounds of the screen
-            // Changes position to keep it in the bounds
-            Rectangle screen = new Rectangle(0, 0, Application.graphics.PreferredBackBufferWidth, Application.graphics.PreferredBackBufferHeight);
-            if (position.X > screen.Width)
-                position.X = 0;
-            if (position.X < 0)
-                position.X = screen.Width;
-            if (position.Y > screen.Height)
-                position.Y = 0;
-            if (position.Y < 0)
-                position.Y = screen.Height;
-        }
-
         void Think() {
             float[] inputs = GetInputs();
             float[] outputs = network.FeedForward(inputs);
 
             // Sets the variables to the outputs from the network
-            movementVelocity = outputs[0];
-            rotationVelocity = outputs[1];
+            movement = outputs[0];
+            turning = outputs[1];
             toEat = outputs[2];
         }
 
         void Act() {
-            position += Forward * movementVelocity * 10;
-            rotation += rotationVelocity * 8;
+            position += Forward * movement * 10;
+            rotation += turning * 8;
         }
 
         float[] GetInputs() {
             return new float[] { 
                 1,
-                movementVelocity,
-                rotationVelocity,
-                // Normalizes the rotation to be in the range [-1, 1]
-                ((rotation % 360) / 180f) - 1,
+                movement,
+                turning,
                 energy / maxEnergy,
                 foodSeen[0],
                 foodSeen[1],
@@ -166,15 +145,8 @@ namespace EDEN {
             };
         }
 
-        public override Rectangle GetRect() {
-            int size = (int)(texture.Width * scale);
-            Point newPos = new Point((int)position.X - size / 2, (int)position.Y - size / 2);
-            Point sizePoint = new Point(size, size);
-            return new Rectangle(newPos, sizePoint);
-        }
-
         public override void Collides(Entity other) {
-            if (other is Food && energy <= maxEnergy - 1 && toEat > 0) {
+            if (other is Food && energy <= maxEnergy - 1) {
                 energy += 1;
                 other.position = Rand.Range(Global.worldSize.ToVector2());
             }

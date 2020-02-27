@@ -13,6 +13,7 @@ namespace EDEN {
         Camera camera = new Camera();
         public Color bgColor;
         public QuadTree quadTree;
+        public bool debug;
 
         public State(Application _app) {
             app = _app;
@@ -20,6 +21,7 @@ namespace EDEN {
 
         public override void SuperStart() {
             components.Add(camera);
+            Input.Initialize(camera);
 
             base.SuperStart();
         }
@@ -27,8 +29,9 @@ namespace EDEN {
         public override void SuperUpdate(GameTime gameTime) {
             Input.Update();
 
-            quadTree?.Update(Components);
-            quadTree?.CheckCollisions();
+            List<Component> childComponents = GetChildComponents();
+            List<Entity> childEntities = quadTree?.UpdateEntities(childComponents);
+            quadTree?.CheckCollisions(childEntities);
 
             base.SuperUpdate(gameTime);
         }
@@ -39,6 +42,9 @@ namespace EDEN {
             UIspriteBatch.Begin();
 
             base.SuperDraw(spriteBatch, UIspriteBatch);
+            
+            if (debug)
+                quadTree?.Draw(spriteBatch);
 
             UIspriteBatch.End();
             spriteBatch.End();

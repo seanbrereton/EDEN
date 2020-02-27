@@ -30,12 +30,16 @@ namespace EDEN {
             if (Input.Click(0, true))
                 if (Input.Press(Keys.LeftShift, true))
                     for (int x = 0; x < 16; x++)
-                        components.Add(new Food(Input.mousePos.ToVector2() + Rand.Range(new Vector2(-32), new Vector2(32))));
+                        components.Add(new Food(Input.MouseWorldPos.ToVector2() + Rand.Range(new Vector2(-32), new Vector2(32))));
                 else
-                    components.Add(new Food(Input.mousePos.ToVector2()));
+                    components.Add(new Food(Input.MouseWorldPos.ToVector2()));
 
             if (Input.Click(1))
-                components.Add(new Creature(Input.mousePos.ToVector2()));
+                for (int i = 0; i < 1; i++)
+                    components.Add(new Creature(Input.MouseWorldPos.ToVector2()));
+
+            if (Input.Press(Keys.Q))
+                debug = !debug;
         }
     }
 }

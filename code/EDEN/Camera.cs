@@ -46,6 +46,11 @@ namespace EDEN {
             if (Input.Press(Keys.D, true) || Input.Press(Keys.Right, true))
                 target.X += 8 * speedMultiplier;
 
+            if (Input.ScrollUp())
+                zoomLevel *= 1.08f;
+            if (Input.ScrollDown())
+                zoomLevel *= 0.92f;
+
             if (Input.Press(Keys.OemPlus, true))
                 zoomLevel *= 1.02f;
             if (Input.Press(Keys.OemMinus, true))

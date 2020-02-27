@@ -16,6 +16,8 @@ namespace EDEN {
 
         public static State activeState;
 
+        public static Texture2D[] branchTextures = new Texture2D[9];
+
         public Application() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -28,9 +30,14 @@ namespace EDEN {
             Textures.Init(this);
             ConfigureScreen();
 
-            activeState = new MainMenu(this);
+            for (int i = 0; i < branchTextures.Length; i++)
+                branchTextures[i] = Textures.Rect(Color.Transparent, Global.worldSize.X, Global.worldSize.Y, 2 * (int)(Math.Pow(2, i)), Color.Goldenrod);
+
+            activeState = new Simulation(this);
             
             activeState.SuperStart();
+
+
 
             base.Initialize();
         }

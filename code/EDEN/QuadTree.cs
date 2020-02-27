@@ -10,24 +10,24 @@ using System.Threading.Tasks;
 namespace EDEN {
     public class QuadTree {
 
-        int maxEntities = 2;
+        int maxEntities = 4;
         int maxLevels = 8;
 
         List<Entity> entities = new List<Entity>();
         Rectangle bounds;
         QuadTree[] branches = new QuadTree[4];
         int level;
-        
-        Texture2D texture;
 
+        Texture2D texture;
+        
         public QuadTree(Rectangle _bounds, int _level = 0) {
             bounds = _bounds;
             level = _level;
-
+            texture = Application.branchTextures[level];
         }
 
-        public void CheckCollisions() {
-            foreach (Entity entity in entities) {
+        public void CheckCollisions(List<Entity> toCheck) {
+            foreach (Entity entity in toCheck) {
                 if (entity.dynamic) {
                     List<Entity> near = Query(entity.rect);
                     foreach (Entity other in near) {
@@ -38,13 +38,18 @@ namespace EDEN {
             }
         }
 
-        public void Update(List<Component> components) {
+        public List<Entity> UpdateEntities(List<Component> components) {
             Clear();
+            List<Entity> allEntities = new List<Entity>();
 
             foreach (Component component in components) {
-                if (component is Entity)
+                if (component is Entity) {
                     Insert((Entity)component);
+                    allEntities.Add((Entity)component);
+                }
             }
+
+            return allEntities;
         }
 
         public void Clear() {
@@ -108,5 +113,13 @@ namespace EDEN {
             return Query(rect, new List<Entity>());
         }
 
+        public void Draw(SpriteBatch spriteBatch) {
+            spriteBatch.Draw(texture, bounds, Color.White);
+            if (branches[0] != null) {
+                foreach (QuadTree branch in branches) {
+                    branch.Draw(spriteBatch);
+                }
+            }
+        }
     }
 }

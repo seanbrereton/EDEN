@@ -4,10 +4,13 @@ using System;
 
 namespace EDEN {
     public class Entity : Component {
+
         public Texture2D texture;
+        public Color color = Color.White;
 
         public Vector2 position;
         public float rotation;
+        public float scale = 1;
 
         public Rectangle rect;
 
@@ -27,8 +30,8 @@ namespace EDEN {
             }
         }
 
-        // A position directly to the side of the entity
-        public Vector2 Sideways {
+        // A position directly to the right of the entity
+        public Vector2 Right {
             get {
                 Vector2 forward = Forward;
                 return new Vector2(forward.Y, -forward.X);
@@ -37,15 +40,15 @@ namespace EDEN {
 
         virtual public Rectangle GetRect() {
             Point pos = position.ToPoint();
-            int width = texture.Width;
-            int height = texture.Height;
+            int width = (int)Math.Round(texture.Width * scale);
+            int height = (int)Math.Round(texture.Height * scale);
             // Gets a rectangle, the center of which is at the current position
             return new Rectangle(pos - new Point(width / 2, height / 2), new Point(width, height));
         }
 
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
             rect = GetRect();
-            (UI ? UIspriteBatch : spriteBatch).Draw(texture, rect, Color.White);
+            (UI ? UIspriteBatch : spriteBatch).Draw(texture, rect, color);
 
             base.SuperDraw(spriteBatch, UIspriteBatch);
         }
