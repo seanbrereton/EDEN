@@ -37,8 +37,6 @@ namespace EDEN {
             
             activeState.SuperStart();
 
-
-
             base.Initialize();
         }
 

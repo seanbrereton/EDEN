@@ -18,9 +18,11 @@ namespace EDEN {
         float turning;
         float movement;
         float toEat;
+        public float toMate;
 
+        float reproductionTimer;
         public float energy;
-        public float maxEnergy = 48;
+        public float maxEnergy = 96;
         int viewSize = 32;
         Rectangle[] visionRects = new Rectangle[3];
 
@@ -30,18 +32,25 @@ namespace EDEN {
         Rectangle rightEyeRect;
                     
         public Creature(Vector2 _position) : base(_position) {
+            color = Rand.RandColor();
+            network = new NeuralNet(Global.layers);
+            Initialize();
+        }
+
+        public Creature(Vector2 _position, Color _color, NeuralNet _network) : base(_position) {
+            color = _color;
+            network = _network;
+            Initialize();
+        }
+
+        public void Initialize() {
             dynamic = true;
 
-            network = new NeuralNet(Global.layers);
-
-            rotation = Rand.Range(360);
-
-            color = Rand.RandColor();
             texture = Textures.Circle(Color.White, radius, 4);
             eyeTexture = Textures.Circle(Color.Black, radius, radius / 2, Color.White);
 
             scale = 0.2f;
-
+            rotation = Rand.Range(360);
             energy = maxEnergy / 2;
 
             for (int i = 0; i < visionRects.Length; i++)
@@ -52,10 +61,24 @@ namespace EDEN {
             Perceive();
             Think();
             Act(deltaTime);
+            KeepInWorld();
             UseEnergy(deltaTime);
 
+            reproductionTimer -= deltaTime;
+
             if (scale < 1)
-                scale += 0.002f;
+                scale += 0.1f * deltaTime;
+        }
+
+        void KeepInWorld() {
+            if (position.X > Global.worldSize.X)
+                position.X = 0;
+            if (position.X < 0)
+                position.X = Global.worldSize.X;
+            if (position.Y > Global.worldSize.Y)
+                position.Y = 0;
+            if (position.Y < 0)
+                position.Y = Global.worldSize.Y;
         }
 
         void Act(float deltaTime) {
@@ -67,7 +90,13 @@ namespace EDEN {
             energy -= deltaTime * (1 + Math.Abs(movement));
 
             if (energy <= 0)
-                Remove();
+                Die();
+        }
+
+        void Die() {
+            parent.AddComponent(new Food(position, color));
+            Remove();
+            ((Simulation)parent).creatures.Remove(this);
         }
 
         void Think() {
@@ -83,6 +112,7 @@ namespace EDEN {
             movement = outputs[0];
             turning = outputs[1];
             toEat = outputs[2];
+            toMate = outputs[3];
         }
 
         float[] GetInputs() {
@@ -142,16 +172,35 @@ namespace EDEN {
                 parent.AddComponent(new Creature(position));
         }
 
-        public override void Collides(Entity other) {
-            if (other is Food) {
+        public override void Collides(Entity entity) {
+            if (entity is Food) {
                 touchingFood = 1;
-                if (energy <= maxEnergy - 1) {
-                    energy += 1;
-                    other.position = Rand.Range(Global.worldSize.ToVector2());
+                if (toEat > 0 && energy <= maxEnergy - 1) {
+                    energy += 8;
+                    ((Simulation)parent).foods.Remove(entity);
+                    entity.Remove();
                 }
-            } else if (other is Creature) {
+            } else if (entity is Creature) {
                 touchingCreature = 1;
+                Creature creature = (Creature)entity;
+                if (toMate > 0 && scale >= 1 && reproductionTimer < 0 && creature.toMate > 0 && creature.scale >= 1 && creature.reproductionTimer < 0)
+                    Reproduce(creature);
             }
+        }
+
+        public void Reproduce(Creature other) {
+            reproductionTimer = 16;
+            other.reproductionTimer = 16;
+
+            energy -= 16;
+            other.energy -= 16;
+
+            NeuralNet newNetwork = new NeuralNet(network, other.network);
+            Color newColor = Color.Lerp(color, other.color, 0.5f);
+
+            Creature newCreature = new Creature(position, newColor, newNetwork);
+            ((Simulation)parent).creatures.Add(newCreature);
+            parent.AddComponent(newCreature);
         }
 
         public override void Draw(SpriteBatch spriteBatch) {

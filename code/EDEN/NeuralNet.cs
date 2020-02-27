@@ -44,6 +44,40 @@ namespace EDEN {
             weights = weightList.ToArray();
         }
 
+        public NeuralNet (NeuralNet net1, NeuralNet net2) {
+            NeuralNet[] parents = { net1, net2 };
+            layers = new int[net1.layers.Length];
+            List<float[]> neuronList = new List<float[]>();
+            List<float[]> biasList = new List<float[]>();
+            List<float[][]> weightList = new List<float[][]>();
+
+            for (int i = 0; i < layers.Length; i++) {
+                layers[i] = net1.layers[i];
+                neuronList.Add(new float[layers[i]]);
+                float[] bias = new float[layers[i]];
+                List<float[]> layerWeightList = new List<float[]>();
+
+                for (int j = 0; j < layers[i]; j++) {
+                    bias[j] = Rand.Choice(parents).biases[i][j];
+
+                    if (i > 0) {
+                        float[] neuronWeights = new float[layers[i - 1]];
+                        for (int k = 0; k < layers[i - 1]; k++)
+                            neuronWeights[k] = Rand.Choice(parents).weights[i-1][j][k];
+                        layerWeightList.Add(neuronWeights);
+                    }
+                }
+
+                biasList.Add(bias);
+                if (i > 0)
+                    weightList.Add(layerWeightList.ToArray());
+            }
+
+            neurons = neuronList.ToArray();
+            biases = biasList.ToArray();
+            weights = weightList.ToArray();
+        }
+
         float Activate(float value) {
             //return (float)Math.Tanh(value);
             float k = (float)Math.Exp(value);
