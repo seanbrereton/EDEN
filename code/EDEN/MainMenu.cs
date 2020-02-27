@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 namespace EDEN {
     class MainMenu : State {
 
-        public MainMenu(Application _app) : base(_app) {
-        
-        }
+        public MainMenu(Application _app) : base(_app) {}
 
         public override void HandleInput() {
             if (Input.Press(Keys.X))

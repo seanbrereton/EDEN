@@ -26,14 +26,14 @@ namespace EDEN {
             base.SuperStart();
         }
 
-        public override void SuperUpdate(GameTime gameTime) {
+        public override void SuperUpdate(float deltaTime) {
             Input.Update();
 
             List<Component> childComponents = GetChildComponents();
             List<Entity> childEntities = quadTree?.UpdateEntities(childComponents);
             quadTree?.CheckCollisions(childEntities);
 
-            base.SuperUpdate(gameTime);
+            base.SuperUpdate(deltaTime);
         }
 
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {

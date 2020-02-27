@@ -12,7 +12,7 @@ namespace EDEN {
 
         public Matrix Transform { get; private set; }
 
-        public override void Update(GameTime gameTime) {
+        public override void Update(float deltaTime) {
             var position = Matrix.CreateTranslation(
                 -target.X,
                 -target.Y,

@@ -11,18 +11,20 @@ namespace EDEN {
         // Network Inputs
         float[] foodSeen = new float[3];
         float[] creaturesSeen = new float[3];
+        float touchingFood;
+        float touchingCreature;
 
         // Network Outputs
         float turning;
         float movement;
         float toEat;
 
-        public float energy = 12;
-        public float maxEnergy = 24;
+        public float energy;
+        public float maxEnergy = 48;
         int viewSize = 32;
         Rectangle[] visionRects = new Rectangle[3];
 
-        int radius = 12;
+        int radius = 8;
         Texture2D eyeTexture;
         Rectangle leftEyeRect;
         Rectangle rightEyeRect;
@@ -30,34 +32,78 @@ namespace EDEN {
         public Creature(Vector2 _position) : base(_position) {
             dynamic = true;
 
-            // Creates a random neural network, using the applications layer parameters
             network = new NeuralNet(Global.layers);
 
-            // Random rotation in degrees
             rotation = Rand.Range(360);
 
             color = Rand.RandColor();
             texture = Textures.Circle(Color.White, radius, 4);
-            eyeTexture = Textures.Circle(Color.Black, 2 * radius, radius, Color.White);
+            eyeTexture = Textures.Circle(Color.Black, radius, radius / 2, Color.White);
 
             scale = 0.2f;
+
+            energy = maxEnergy / 2;
 
             for (int i = 0; i < visionRects.Length; i++)
                 visionRects[i] = new Rectangle(Point.Zero, new Point(viewSize));
         }
 
-        public override void Update(GameTime gameTime) {
-            // Gets inputs, puts them through neural net, sets and uses outputs
+        public override void Update(float deltaTime) {
             Perceive();
             Think();
-            Act();
+            Act(deltaTime);
+            UseEnergy(deltaTime);
 
             if (scale < 1)
                 scale += 0.002f;
+        }
 
-            energy -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+        void Act(float deltaTime) {
+            position += Forward * movement * 200 * deltaTime;
+            rotation += turning * 160 * deltaTime;
+        }
+
+        void UseEnergy(float deltaTime) {
+            energy -= deltaTime * (1 + Math.Abs(movement));
+
             if (energy <= 0)
                 Die();
+        }
+
+        void Die() {
+            delete = true;
+        }
+
+        void Think() {
+            float[] inputs = GetInputs();
+
+            // Resets inputs that need to be reset
+            touchingFood = 0;
+            touchingCreature = 0;
+
+            float[] outputs = network.FeedForward(inputs);
+
+            // Sets the variables to the outputs from the network
+            movement = outputs[0];
+            turning = outputs[1];
+            toEat = outputs[2];
+        }
+
+        float[] GetInputs() {
+            return new float[] { 
+                1,
+                movement,
+                turning,
+                energy / maxEnergy,
+                foodSeen[0],
+                foodSeen[1],
+                foodSeen[2],
+                creaturesSeen[0],
+                creaturesSeen[1],
+                creaturesSeen[2],
+                touchingFood,
+                touchingCreature
+            };
         }
 
         void Perceive() {
@@ -86,26 +132,28 @@ namespace EDEN {
                 }
             }
 
-            if (totalFoodSeen > 0) {
+            if (totalFoodSeen > 0)
                 for (int i = 0; i < foodSeen.Length; i++)
                     foodSeen[i] = foodSeen[i] / totalFoodSeen;
-            }
 
-            if (totalCreaturesSeen > 0) {
+            if (totalCreaturesSeen > 0)
                 for (int i = 0; i < creaturesSeen.Length; i++)
                     creaturesSeen[i] = creaturesSeen[i] / totalCreaturesSeen;
-            }
-
         }
 
-        void Die() {
-            delete = true;
+        public override void Collides(Entity other) {
+            if (other is Food) {
+                touchingFood = 1;
+                if (energy <= maxEnergy - 1 && toEat > 0.5) {
+                    energy += 1;
+                    other.position = Rand.Range(Global.worldSize.ToVector2());
+                }
+            } else if (other is Creature) {
+                touchingCreature = 1;
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch) {
-            // This is all bad and complex and temporary.
-            // TODO: Generate the original texture with the eyes, then just draw the texture at the correct angle.
-
             Point leftEyePos = (position + (Forward * (rect.Width * 0.35f)) + (Right * (rect.Width * 0.3f))).ToPoint();
             Point rightEyePos = (position + (Forward * (rect.Width * 0.35f)) - (Right * (rect.Width * 0.3f))).ToPoint();
             leftEyeRect = new Rectangle(leftEyePos.X - rect.Width / 6, leftEyePos.Y - rect.Height / 6, rect.Width / 3, rect.Height / 3);
@@ -113,43 +161,6 @@ namespace EDEN {
 
             spriteBatch.Draw(eyeTexture, leftEyeRect, Color.White);
             spriteBatch.Draw(eyeTexture, rightEyeRect, Color.White);
-        }
-
-        void Think() {
-            float[] inputs = GetInputs();
-            float[] outputs = network.FeedForward(inputs);
-
-            // Sets the variables to the outputs from the network
-            movement = outputs[0];
-            turning = outputs[1];
-            toEat = outputs[2];
-        }
-
-        void Act() {
-            position += Forward * movement * 10;
-            rotation += turning * 8;
-        }
-
-        float[] GetInputs() {
-            return new float[] { 
-                1,
-                movement,
-                turning,
-                energy / maxEnergy,
-                foodSeen[0],
-                foodSeen[1],
-                foodSeen[2],
-                creaturesSeen[0],
-                creaturesSeen[1],
-                creaturesSeen[2]
-            };
-        }
-
-        public override void Collides(Entity other) {
-            if (other is Food && energy <= maxEnergy - 1) {
-                energy += 1;
-                other.position = Rand.Range(Global.worldSize.ToVector2());
-            }
         }
     }
 }

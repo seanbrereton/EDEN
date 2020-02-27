@@ -61,7 +61,7 @@ namespace EDEN {
         }
 
         protected override void Update(GameTime gameTime) {
-            activeState.SuperUpdate(gameTime);
+            activeState.SuperUpdate((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             if (Input.Press(Keys.F)) {
                 fullscreen = !fullscreen;

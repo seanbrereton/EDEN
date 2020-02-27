@@ -28,9 +28,9 @@ namespace EDEN {
         }
 
         public virtual void HandleInput() { }
-        public virtual void Update(GameTime gameTime) { }
-        public virtual void SuperUpdate(GameTime gameTime) {
-            Update(gameTime);
+        public virtual void Update(float deltaTime) { }
+        public virtual void SuperUpdate(float deltaTime) {
+            Update(deltaTime);
             HandleInput();
 
             List<Component> toDelete = new List<Component>();
@@ -39,7 +39,7 @@ namespace EDEN {
                 if (component.delete)
                     toDelete.Add(component);
                 else
-                    component.SuperUpdate(gameTime);
+                    component.SuperUpdate(deltaTime);
             }
 
             foreach (Component component in toDelete)
