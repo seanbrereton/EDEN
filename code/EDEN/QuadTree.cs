@@ -11,7 +11,7 @@ namespace EDEN {
     public class QuadTree {
 
         int maxEntities = 4;
-        int maxLevels = 8;
+        int maxLevels = 16;
 
         List<Entity> entities = new List<Entity>();
         Rectangle bounds;

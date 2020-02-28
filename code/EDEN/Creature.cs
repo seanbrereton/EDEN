@@ -9,8 +9,8 @@ namespace EDEN {
         public NeuralNet network;
 
         // Network Inputs
-        float[] foodSeen = new float[3];
-        float[] creaturesSeen = new float[3];
+        float[] foodSeen = new float[2];
+        float[] creaturesSeen = new float[2];
         float touchingFood;
         float touchingCreature;
 
@@ -20,11 +20,13 @@ namespace EDEN {
         float toEat;
         public float toMate;
 
-        float reproductionTimer;
+        public int generation;
+        public float age;
+        public float reproductionTimer;
         public float energy;
         public float maxEnergy = 96;
-        int viewSize = 32;
-        Rectangle[] visionRects = new Rectangle[3];
+        int viewSize = 16;
+        Rectangle[] visionRects = new Rectangle[2];
 
         int radius = 8;
         Texture2D eyeTexture;
@@ -32,12 +34,14 @@ namespace EDEN {
         Rectangle rightEyeRect;
                     
         public Creature(Vector2 _position) : base(_position) {
+            generation = 0;
             color = Rand.RandColor();
             network = new NeuralNet(Global.layers);
             Initialize();
         }
 
-        public Creature(Vector2 _position, Color _color, NeuralNet _network) : base(_position) {
+        public Creature(Vector2 _position, Color _color, NeuralNet _network, int _generation) : base(_position) {
+            generation = _generation;
             color = _color;
             network = _network;
             Initialize();
@@ -65,6 +69,7 @@ namespace EDEN {
             UseEnergy(deltaTime);
 
             reproductionTimer -= deltaTime;
+            age += deltaTime;
 
             if (scale < 1)
                 scale += 0.1f * deltaTime;
@@ -83,7 +88,7 @@ namespace EDEN {
 
         void Act(float deltaTime) {
             position += Forward * movement * 200 * deltaTime;
-            rotation += turning * 160 * deltaTime;
+            rotation += turning * 240 * deltaTime;
         }
 
         void UseEnergy(float deltaTime) {
@@ -123,24 +128,21 @@ namespace EDEN {
                 energy / maxEnergy,
                 foodSeen[0],
                 foodSeen[1],
-                foodSeen[2],
                 creaturesSeen[0],
                 creaturesSeen[1],
-                creaturesSeen[2],
                 touchingFood,
                 touchingCreature
             };
         }
 
         void Perceive() {
-            foodSeen = new float[3];
-            creaturesSeen = new float[3];
+            foodSeen = new float[2];
+            creaturesSeen = new float[2];
             int totalFoodSeen = 0;
             int totalCreaturesSeen = 0;
 
-            visionRects[0].Location = (position + Forward * viewSize).ToPoint();
+            visionRects[0].Location = (position - Right * viewSize).ToPoint();
             visionRects[1].Location = (position + Right * viewSize).ToPoint();
-            visionRects[2].Location = (position - Right * viewSize).ToPoint();
 
             for (int i = 0; i < visionRects.Length; i++) {
                 visionRects[i].Offset(-viewSize / 2, -viewSize / 2);
@@ -192,13 +194,14 @@ namespace EDEN {
             reproductionTimer = 16;
             other.reproductionTimer = 16;
 
-            energy -= 16;
-            other.energy -= 16;
+            energy -= maxEnergy / 3;
+            other.energy -= maxEnergy / 3;
 
             NeuralNet newNetwork = new NeuralNet(network, other.network);
             Color newColor = Color.Lerp(color, other.color, 0.5f);
+            int newGeneration = Math.Max(generation, other.generation) + 1;
 
-            Creature newCreature = new Creature(position, newColor, newNetwork);
+            Creature newCreature = new Creature(position, newColor, newNetwork, newGeneration);
             ((Simulation)parent).creatures.Add(newCreature);
             parent.AddComponent(newCreature);
         }

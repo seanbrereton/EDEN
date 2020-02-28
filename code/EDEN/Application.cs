@@ -16,7 +16,7 @@ namespace EDEN {
 
         public static State activeState;
 
-        public static Texture2D[] branchTextures = new Texture2D[9];
+        public static Texture2D[] branchTextures = new Texture2D[17];
 
         public Application() {
             graphics = new GraphicsDeviceManager(this);

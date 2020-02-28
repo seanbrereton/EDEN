@@ -33,7 +33,7 @@ namespace EDEN {
             List<Entity> childEntities = quadTree?.UpdateEntities(childComponents);
             quadTree?.CheckCollisions(childEntities);
 
-            base.SuperUpdate(deltaTime * 2);
+            base.SuperUpdate(deltaTime);
         }
 
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {

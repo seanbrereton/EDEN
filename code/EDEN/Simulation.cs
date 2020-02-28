@@ -8,12 +8,12 @@ namespace EDEN {
 
         // Settings
         int minPopulation = 256;
-        int initialPopulation = 512;
+        int initialPopulation = 1024;
         float foodDensity = 1.6f;
 
         public bool running = false;
 
-        public List<Component> creatures = new List<Component>();
+        public List<Creature> creatures = new List<Creature>();
         public List<Component> foods = new List<Component>();
 
         public Simulation(Application _app) : base(_app) {
@@ -21,7 +21,7 @@ namespace EDEN {
         }
 
         public override void Start() {
-            bgColor = Color.SeaGreen;
+            bgColor = Color.DarkSlateBlue;
 
             Entity background = new Entity(new Point(Global.worldSize.X/2, Global.worldSize.Y/2).ToVector2());
             background.texture = Textures.Rect(Color.DarkOliveGreen, Global.worldSize.X, Global.worldSize.Y);
@@ -38,7 +38,17 @@ namespace EDEN {
         }
 
         public override void Update(float deltaTime) {
-            Console.WriteLine(creatures.Count);
+            int highestGeneration = 0;
+            float highestAge = 0;
+
+            foreach (Creature creature in creatures) {
+                if (creature.generation > highestGeneration)
+                    highestGeneration = creature.generation;
+                if (creature.age > highestAge)
+                    highestAge = creature.age;
+            }
+
+            Console.WriteLine("===\nPop: " + creatures.Count + "\nGen: " + highestGeneration + "\nAge: " + highestAge);
 
             while (creatures.Count < minPopulation)
                 SpawnNewCreature();
