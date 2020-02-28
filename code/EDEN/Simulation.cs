@@ -7,9 +7,9 @@ namespace EDEN {
     class Simulation : State {
 
         // Settings
-        int minPopulation = 256;
-        int initialPopulation = 1024;
-        float foodDensity = 1.6f;
+        int minPopulation = 128;
+        int initialPopulation = 256;
+        float foodDensity = 1.2f;
 
         public bool running = false;
 
@@ -39,14 +39,23 @@ namespace EDEN {
 
         public override void Update(float deltaTime) {
             int highestGeneration = 0;
+            Creature highestGenerationCreature = null;
             float highestAge = 0;
+            Creature highestAgeCreature = null;
 
             foreach (Creature creature in creatures) {
-                if (creature.generation > highestGeneration)
+                if (creature.generation > highestGeneration) {
                     highestGeneration = creature.generation;
-                if (creature.age > highestAge)
+                    highestGenerationCreature = creature;
+                }
+                if (creature.age > highestAge) {
                     highestAge = creature.age;
+                    highestAgeCreature = creature;
+                }
             }
+
+            highestGenerationCreature?.Highlight(Color.Blue);
+            highestAgeCreature?.Highlight(Color.Red);
 
             Console.WriteLine("===\nPop: " + creatures.Count + "\nGen: " + highestGeneration + "\nAge: " + highestAge);
 

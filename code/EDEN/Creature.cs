@@ -9,8 +9,8 @@ namespace EDEN {
         public NeuralNet network;
 
         // Network Inputs
-        float[] foodSeen = new float[2];
-        float[] creaturesSeen = new float[2];
+        float[] foodSeen = new float[3];
+        float[] creaturesSeen = new float[3];
         float touchingFood;
         float touchingCreature;
 
@@ -25,8 +25,8 @@ namespace EDEN {
         public float reproductionTimer;
         public float energy;
         public float maxEnergy = 96;
-        int viewSize = 16;
-        Rectangle[] visionRects = new Rectangle[2];
+        int viewSize = 24;
+        Rectangle[] visionRects = new Rectangle[3];
 
         int radius = 8;
         Texture2D eyeTexture;
@@ -123,26 +123,27 @@ namespace EDEN {
         float[] GetInputs() {
             return new float[] { 
                 1,
-                movement,
-                turning,
                 energy / maxEnergy,
                 foodSeen[0],
                 foodSeen[1],
+                foodSeen[2],
                 creaturesSeen[0],
                 creaturesSeen[1],
+                creaturesSeen[2],
                 touchingFood,
                 touchingCreature
             };
         }
 
         void Perceive() {
-            foodSeen = new float[2];
-            creaturesSeen = new float[2];
+            foodSeen = new float[3];
+            creaturesSeen = new float[3];
             int totalFoodSeen = 0;
             int totalCreaturesSeen = 0;
 
-            visionRects[0].Location = (position - Right * viewSize).ToPoint();
+            visionRects[0].Location = (position + Forward * viewSize).ToPoint();
             visionRects[1].Location = (position + Right * viewSize).ToPoint();
+            visionRects[2].Location = (position - Right * viewSize).ToPoint();
 
             for (int i = 0; i < visionRects.Length; i++) {
                 visionRects[i].Offset(-viewSize / 2, -viewSize / 2);
