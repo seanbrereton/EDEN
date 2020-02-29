@@ -7,6 +7,8 @@ namespace EDEN {
 
         public Texture2D texture;
         public Color color = Color.White;
+        Color highlightColor;
+        Texture2D highlightTexture;
 
         public Vector2 position;
         public float rotation;
@@ -46,9 +48,25 @@ namespace EDEN {
             return new Rectangle(pos - new Point(width / 2, height / 2), new Point(width, height));
         }
 
+        public void Highlight(Color color) {
+            if (highlightTexture is null)
+                highlightTexture = Textures.Circle(
+                    Color.Transparent,
+                    Math.Max(texture.Width, texture.Height),
+                    4, Color.White
+                );
+            highlightColor = color;
+        }
+
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
             rect = GetRect();
             (UI ? UIspriteBatch : spriteBatch).Draw(texture, rect, color);
+            if (highlightTexture != null && highlightColor != Color.Transparent) {
+                Rectangle highlightRect = new Rectangle(rect.Location, rect.Size);
+                highlightRect.Inflate(rect.Width / 2, rect.Height / 2);
+                (UI ? UIspriteBatch : spriteBatch).Draw(highlightTexture, highlightRect, highlightColor);
+                highlightColor = Color.Transparent;
+            }
 
             base.SuperDraw(spriteBatch, UIspriteBatch);
         }

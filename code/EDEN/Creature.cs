@@ -9,8 +9,8 @@ namespace EDEN {
         public NeuralNet network;
 
         // Network Inputs
-        float[] foodSeen = new float[2];
-        float[] creaturesSeen = new float[2];
+        float[] foodSeen = new float[3];
+        float[] creaturesSeen = new float[3];
         float touchingFood;
         float touchingCreature;
 
@@ -20,12 +20,13 @@ namespace EDEN {
         float toEat;
         public float toMate;
 
+        public int childrenCount;
         public int generation;
         public float age;
         public float reproductionTimer;
         public float energy;
         public float maxEnergy = 96;
-        int viewSize = 16;
+        int viewSize = 96;
         Rectangle[] visionRects = new Rectangle[2];
 
         int radius = 8;
@@ -123,26 +124,27 @@ namespace EDEN {
         float[] GetInputs() {
             return new float[] { 
                 1,
-                movement,
-                turning,
                 energy / maxEnergy,
                 foodSeen[0],
                 foodSeen[1],
+                foodSeen[2],
                 creaturesSeen[0],
                 creaturesSeen[1],
+                creaturesSeen[2],
                 touchingFood,
                 touchingCreature
             };
         }
 
         void Perceive() {
-            foodSeen = new float[2];
-            creaturesSeen = new float[2];
-            int totalFoodSeen = 0;
-            int totalCreaturesSeen = 0;
+            foodSeen = new float[3];
+            creaturesSeen = new float[3];
 
-            visionRects[0].Location = (position - Right * viewSize).ToPoint();
-            visionRects[1].Location = (position + Right * viewSize).ToPoint();
+            visionRects[0].Location = (position - (Right * (radius + viewSize / 6)) + (Forward * viewSize / 2)).ToPoint();
+            visionRects[1].Location = (position + (Right * (radius + viewSize / 6)) + (Forward * viewSize / 2)).ToPoint();
+
+            List<Entity> leftFoods = new List<Entity>();
+            List<Entity> leftCreatures = new List<Entity>();
 
             for (int i = 0; i < visionRects.Length; i++) {
                 visionRects[i].Offset(-viewSize / 2, -viewSize / 2);
@@ -150,20 +152,28 @@ namespace EDEN {
                 foreach (Entity entity in seen) {
                     if (visionRects[i].Intersects(entity.rect)) {
                         if (entity is Food) {
+                            if (i == 0)
+                                leftFoods.Add(entity);
+                            else if (leftFoods.Contains(entity))
+                                foodSeen[2] += 1;
                             foodSeen[i] += 1;
-                            totalFoodSeen += 1;
                         } else if (entity is Creature) {
+                            if (i == 0)
+                                leftCreatures.Add(entity);
+                            else if (leftCreatures.Contains(entity))
+                                creaturesSeen[2] += 1;
                             creaturesSeen[i] += 1;
-                            totalCreaturesSeen += 1;
                         }
                     }
                 }
             }
 
+            float totalFoodSeen = foodSeen[0] + foodSeen[1] - foodSeen[2];
             if (totalFoodSeen > 0)
                 for (int i = 0; i < foodSeen.Length; i++)
                     foodSeen[i] = foodSeen[i] / totalFoodSeen;
-
+            
+            float totalCreaturesSeen = creaturesSeen[0] + creaturesSeen[1] - creaturesSeen[2];
             if (totalCreaturesSeen > 0)
                 for (int i = 0; i < creaturesSeen.Length; i++)
                     creaturesSeen[i] = creaturesSeen[i] / totalCreaturesSeen;
@@ -191,6 +201,9 @@ namespace EDEN {
         }
 
         public void Reproduce(Creature other) {
+            childrenCount += 1;
+            other.childrenCount += 1;
+
             reproductionTimer = 16;
             other.reproductionTimer = 16;
 
@@ -214,6 +227,9 @@ namespace EDEN {
 
             spriteBatch.Draw(eyeTexture, leftEyeRect, Color.White);
             spriteBatch.Draw(eyeTexture, rightEyeRect, Color.White);
+            /*spriteBatch.Draw(eyeTexture, visionRects[0], Color.White);
+            spriteBatch.Draw(eyeTexture, visionRects[1], Color.White);
+*/
         }
     }
 }
