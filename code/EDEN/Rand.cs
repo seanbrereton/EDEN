@@ -5,7 +5,7 @@ namespace EDEN {
 	public static class Rand {
 
         // Instantiates a Random object
-		static Random rand = new Random();
+		static Random rand = new Random(DateTime.Now.Millisecond);
 
 		public static Color RandColor() {
             // Generates a random colour using random RGB values (0 - 255)

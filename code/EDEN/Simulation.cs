@@ -7,11 +7,11 @@ namespace EDEN {
     class Simulation : State {
 
         // Settings
-        int minPopulation = 128;
-        int initialPopulation = 256;
+        int minPopulation = 512;
+        int initialPopulation = 512;
         float foodDensity = 0.8f;
 
-        public bool running = false;
+        public Environment environment;
 
         public List<Creature> creatures = new List<Creature>();
         public List<Component> foods = new List<Component>();
@@ -21,11 +21,10 @@ namespace EDEN {
         }
 
         public override void Start() {
-            bgColor = Color.DarkSlateBlue;
+            bgColor = Color.DodgerBlue;
 
-            Entity background = new Entity(new Point(Global.worldSize.X/2, Global.worldSize.Y/2).ToVector2());
-            background.texture = Textures.Rect(Color.DarkOliveGreen, Global.worldSize.X, Global.worldSize.Y);
-            AddComponent(background);
+            environment = new Environment(Global.worldSize.ToVector2() / 2, Global.worldSize, 16, 0.56f, 9);
+            AddComponent(environment);
 
             // Spawn starting food (TEMP)
             for (int i = 0; i < (int)(initialPopulation * foodDensity); i++)
@@ -76,9 +75,11 @@ namespace EDEN {
         }
 
         public void SpawnNewFood(Vector2 position) {
-            Food newFood = new Food(position);
-            foods.Add(newFood);
-            AddComponent(newFood);
+            if (environment.CheckTile(position)) {
+                Food newFood = new Food(position);
+                foods.Add(newFood);
+                AddComponent(newFood);
+            }
         }
         public void SpawnNewFood() {
             SpawnNewFood(Rand.Range(Global.worldSize.ToVector2()));

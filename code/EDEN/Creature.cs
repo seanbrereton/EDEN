@@ -11,8 +11,10 @@ namespace EDEN {
         // Network Inputs
         float[] foodSeen = new float[3];
         float[] creaturesSeen = new float[3];
+        float[] waterSeen = new float[3];
         float touchingFood;
         float touchingCreature;
+        float touchingWater;
 
         // Network Outputs
         float turning;
@@ -33,6 +35,9 @@ namespace EDEN {
         Texture2D eyeTexture;
         Rectangle leftEyeRect;
         Rectangle rightEyeRect;
+
+        float perceiveTimer;
+        bool allSeeing;
                     
         public Creature(Vector2 _position) : base(_position) {
             generation = 0;
@@ -63,28 +68,22 @@ namespace EDEN {
         }
 
         public override void Update(float deltaTime) {
-            Perceive();
+            if (perceiveTimer <= 0f || allSeeing) {
+                Perceive();
+                perceiveTimer = 0.05f;
+            }
+
             Think();
             Act(deltaTime);
-            KeepInWorld();
+            // WrapInBounds(Global.worldSize);
             UseEnergy(deltaTime);
 
+            perceiveTimer -= deltaTime;
             reproductionTimer -= deltaTime;
             age += deltaTime;
 
             if (scale < 1)
                 scale += 0.1f * deltaTime;
-        }
-
-        void KeepInWorld() {
-            if (position.X > Global.worldSize.X)
-                position.X = 0;
-            if (position.X < 0)
-                position.X = Global.worldSize.X;
-            if (position.Y > Global.worldSize.Y)
-                position.Y = 0;
-            if (position.Y < 0)
-                position.Y = Global.worldSize.Y;
         }
 
         void Act(float deltaTime) {
@@ -93,7 +92,7 @@ namespace EDEN {
         }
 
         void UseEnergy(float deltaTime) {
-            energy -= deltaTime * (1 + Math.Abs(movement));
+            energy -= deltaTime * (1 + Math.Abs(movement) + touchingWater * 4);
 
             if (energy <= 0)
                 Die();
@@ -122,17 +121,20 @@ namespace EDEN {
         }
 
         float[] GetInputs() {
-            return new float[] { 
-                1,
+            return new float[] {
                 energy / maxEnergy,
                 foodSeen[0],
                 foodSeen[1],
                 foodSeen[2],
+                touchingFood,
                 creaturesSeen[0],
                 creaturesSeen[1],
                 creaturesSeen[2],
-                touchingFood,
-                touchingCreature
+                touchingCreature,
+                waterSeen[0],
+                waterSeen[1],
+                waterSeen[2],
+                touchingWater
             };
         }
 
@@ -148,6 +150,9 @@ namespace EDEN {
 
             for (int i = 0; i < visionRects.Length; i++) {
                 visionRects[i].Offset(-viewSize / 2, -viewSize / 2);
+
+                waterSeen[i] = ((Simulation)parent).environment.CheckTile(visionRects[i].Center.ToVector2()) ? 0 : 1;
+
                 List<Entity> seen = Application.activeState.quadTree.Query(visionRects[i]);
                 foreach (Entity entity in seen) {
                     if (visionRects[i].Intersects(entity.rect)) {
@@ -168,6 +173,10 @@ namespace EDEN {
                 }
             }
 
+            waterSeen[2] = ((Simulation)parent).environment.CheckTile(position + (Forward * (radius + viewSize))) ? 0 : 1;
+
+            touchingWater = ((Simulation)parent).environment.CheckTile(position) ? 0 : 1;
+
             float totalFoodSeen = foodSeen[0] + foodSeen[1] - foodSeen[2];
             if (totalFoodSeen > 0)
                 for (int i = 0; i < foodSeen.Length; i++)
@@ -180,8 +189,9 @@ namespace EDEN {
         }
 
         public override void HandleInput() {
-            if (Input.Press(Microsoft.Xna.Framework.Input.Keys.N))
-                parent.AddComponent(new Creature(position));
+            if (Input.Press(Microsoft.Xna.Framework.Input.Keys.P)) {
+                allSeeing = !allSeeing;
+            }
         }
 
         public override void Collides(Entity entity) {

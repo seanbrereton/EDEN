@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace EDEN {
     public class QuadTree {
 
-        int maxEntities = 4;
-        int maxLevels = 16;
+        int maxEntities = 6;
+        int maxLevels = 10;
 
         List<Entity> entities = new List<Entity>();
         Rectangle bounds;
