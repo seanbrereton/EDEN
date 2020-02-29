@@ -6,7 +6,7 @@ namespace EDEN {
     
     public class Camera : Component {
         //center camera
-        Vector2 target = new Vector2(800, 450);
+        public Vector2 target = new Vector2(800, 450);
 
         float zoomLevel = 1;
 

@@ -9,7 +9,7 @@ namespace EDEN {
         // Settings
         int minPopulation = 128;
         int initialPopulation = 256;
-        float foodDensity = 1.2f;
+        float foodDensity = 0.8f;
 
         public bool running = false;
 
@@ -38,15 +38,15 @@ namespace EDEN {
         }
 
         public override void Update(float deltaTime) {
-            int highestGeneration = 0;
-            Creature highestGenerationCreature = null;
+            int highestChildren = 0;
+            Creature highestChildrenCreature = null;
             float highestAge = 0;
             Creature highestAgeCreature = null;
 
             foreach (Creature creature in creatures) {
-                if (creature.generation > highestGeneration) {
-                    highestGeneration = creature.generation;
-                    highestGenerationCreature = creature;
+                if (creature.childrenCount > highestChildren) {
+                    highestChildren = creature.childrenCount;
+                    highestChildrenCreature = creature;
                 }
                 if (creature.age > highestAge) {
                     highestAge = creature.age;
@@ -54,10 +54,10 @@ namespace EDEN {
                 }
             }
 
-            highestGenerationCreature?.Highlight(Color.Blue);
+            highestChildrenCreature?.Highlight(Color.Blue);
             highestAgeCreature?.Highlight(Color.Red);
 
-            Console.WriteLine("===\nPop: " + creatures.Count + "\nGen: " + highestGeneration + "\nAge: " + highestAge);
+            Console.WriteLine("===\nPop: " + creatures.Count + "\nKid: " + highestChildren + "\nAge: " + highestAge);
 
             while (creatures.Count < minPopulation)
                 SpawnNewCreature();
@@ -65,13 +65,14 @@ namespace EDEN {
                 SpawnNewFood();
         }
 
-        public void SpawnNewCreature(Vector2 position) {
+        public Creature SpawnNewCreature(Vector2 position) {
             Creature newCreature = new Creature(position);
             creatures.Add(newCreature);
             AddComponent(newCreature);
+            return newCreature;
         }
-        public void SpawnNewCreature() {
-            SpawnNewCreature(Rand.Range(Global.worldSize.ToVector2()));
+        public Creature SpawnNewCreature() {
+            return SpawnNewCreature(Rand.Range(Global.worldSize.ToVector2()));
         }
 
         public void SpawnNewFood(Vector2 position) {
@@ -97,6 +98,11 @@ namespace EDEN {
 
             if (Input.Press(Keys.Q))
                 debug = !debug;
+
+            if (Input.Press(Keys.OemCloseBrackets))
+                gameSpeed += 0.5f;
+            if (Input.Press(Keys.OemOpenBrackets))
+                gameSpeed -= 0.5f;
         }
     }
 }

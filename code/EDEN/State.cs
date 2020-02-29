@@ -10,10 +10,11 @@ namespace EDEN {
     public class State : Component {
 
         public Application app;
-        Camera camera = new Camera();
+        public Camera camera = new Camera();
         public Color bgColor;
         public QuadTree quadTree;
         public bool debug;
+        public float gameSpeed = 1;
 
         public State(Application _app) {
             app = _app;
@@ -33,7 +34,7 @@ namespace EDEN {
             List<Entity> childEntities = quadTree?.UpdateEntities(childComponents);
             quadTree?.CheckCollisions(childEntities);
 
-            base.SuperUpdate(deltaTime);
+            base.SuperUpdate(deltaTime * gameSpeed);
         }
 
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
