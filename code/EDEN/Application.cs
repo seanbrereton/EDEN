@@ -10,6 +10,7 @@ namespace EDEN {
 
         SpriteBatch spriteBatch;
         SpriteBatch UIspriteBatch;
+        public static SpriteFont font;
 
         bool fullscreen = false;
         public static Vector2 screenSize = new Vector2(1600, 900);
@@ -24,6 +25,10 @@ namespace EDEN {
             IsMouseVisible = true;
         }
 
+        protected override void LoadContent() {
+            font = Content.Load<SpriteFont>("Fonts/Font");
+        }
+
         protected override void Initialize() {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             UIspriteBatch = new SpriteBatch(GraphicsDevice);
@@ -33,7 +38,7 @@ namespace EDEN {
             for (int i = 0; i < branchTextures.Length; i++)
                 branchTextures[i] = Textures.Rect(Color.Transparent, Global.worldSize.X, Global.worldSize.Y, 2 * (int)(Math.Pow(2, i)), Color.Goldenrod);
 
-            activeState = new Simulation(this);
+            activeState = new MainMenu(this);
             
             activeState.SuperStart();
 
