@@ -8,6 +8,10 @@ namespace EDEN {
             graphics = app.GraphicsDevice;
         }
 
+        public static Texture2D Empty(int width, int height) {
+            return new Texture2D(graphics, width, height);
+        }
+
         // Draws circular texture
         public static Texture2D Circle(Color color, int radius, int outlineWidth, Color outlineColor) {
             int diameter = radius * 2;

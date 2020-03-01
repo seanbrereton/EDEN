@@ -22,6 +22,17 @@ namespace EDEN {
             position = _position;
         }
 
+        public void WrapInBounds(Point bounds) {
+            if (position.X > bounds.X)
+                position.X = 0;
+            if (position.X < 0)
+                position.X = bounds.X;
+            if (position.Y > bounds.Y)
+                position.Y = 0;
+            if (position.Y < 0)
+                position.Y = bounds.Y;
+        }
+
         // A position directly in front of the entity, based on current rotation and position
         public Vector2 Forward {
             get {
