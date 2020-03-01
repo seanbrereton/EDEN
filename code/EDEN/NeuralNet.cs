@@ -79,9 +79,9 @@ namespace EDEN {
         }
 
         float Activate(float value) {
-            //return (float)Math.Tanh(value);
-            float k = (float)Math.Exp(value);
-            return -1 + (2 * k) / (1f + k);
+            return (float)Math.Tanh(value);
+            /*float k = (float)Math.Exp(value);
+            return -1 + (2 * k) / (1f + k);*/
         }
 
         public float[] FeedForward(float[] inputs) {

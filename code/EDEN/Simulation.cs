@@ -24,7 +24,7 @@ namespace EDEN {
             bgColor = Color.DodgerBlue;
 
             camera.locked = false;
-            environment = new Environment(Global.worldSize.ToVector2() / 2, Global.worldSize, 16, 0.56f, 9);
+            environment = new Environment(Global.worldSize.ToVector2() / 2, Global.worldSize, 16, 0.6f, 9);
             AddComponent(environment);
 
             // Spawn starting food (TEMP)

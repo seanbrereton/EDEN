@@ -92,7 +92,7 @@ namespace EDEN {
         }
 
         void UseEnergy(float deltaTime) {
-            energy -= deltaTime * (1 + Math.Abs(movement) + touchingWater * 4);
+            energy -= deltaTime * (1 + Math.Abs(movement) * 2 + touchingWater * 4);
 
             if (energy <= 0)
                 Die();
