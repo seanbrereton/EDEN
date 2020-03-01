@@ -3,12 +3,19 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace EDEN {
-    
+
     public class Camera : Component {
-        //center camera
-        public Vector2 target = new Vector2(800, 450);
+
+        public Vector2 screenSize;
+        public Vector2 target;
+        public bool locked = true;
 
         float zoomLevel = 1;
+
+        public Camera(Vector2 _screenSize) {
+            screenSize = _screenSize;
+            target = screenSize / 2;
+        }
 
         public Matrix Transform { get; private set; }
 
@@ -19,8 +26,8 @@ namespace EDEN {
                 0);
 
             var offset = Matrix.CreateTranslation(
-                Application.screenSize.X / 2,
-                Application.screenSize.Y / 2,
+                screenSize.X / 2,
+                screenSize.Y / 2,
                 0);
 
             var zoom = Matrix.CreateScale(
@@ -31,6 +38,9 @@ namespace EDEN {
         }
 
         public override void HandleInput() {
+            if (locked)
+                return;
+
             //sets up keyboard input for camera control
             
             int speedMultiplier = 1;

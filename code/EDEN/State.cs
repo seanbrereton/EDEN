@@ -10,7 +10,7 @@ namespace EDEN {
     public class State : Component {
 
         public Application app;
-        public Camera camera = new Camera();
+        public Camera camera;
         public Color bgColor;
         public QuadTree quadTree;
         public bool debug;
@@ -21,6 +21,7 @@ namespace EDEN {
         }
 
         public override void SuperStart() {
+            camera = new Camera(app.screenSize);
             AddComponent(camera);
             Input.Initialize(camera);
 
@@ -39,6 +40,7 @@ namespace EDEN {
 
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
             app.GraphicsDevice.Clear(bgColor);
+            
             spriteBatch.Begin(transformMatrix: camera.Transform);
             UIspriteBatch.Begin();
 

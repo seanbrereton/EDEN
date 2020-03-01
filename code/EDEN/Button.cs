@@ -23,22 +23,22 @@ namespace EDEN {
             action = _action;
         }
 
-        public bool isPressed() {
-            return Input.Click(0, true) && rect.Contains(Input.MousePos);   
+        public bool IsPressed() {
+            return Input.Click() && rect.Contains(Input.MousePos);   
         }
 
-        public bool isHover() {
+        public bool IsHover() {
             return rect.Contains(Input.MousePos);   
         }
         
         public override void HandleInput() {
-            if (isHover()) {
+            if (IsHover()) {
                 color = hoverColor;
             } else {
                 color = defaultColor;
             }
 
-            if (isPressed())
+            if (IsPressed())
                 action();
         }
 

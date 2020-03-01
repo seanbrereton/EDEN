@@ -21,6 +21,7 @@ namespace EDEN {
         }
 
         public override void Start() {
+            camera.locked = false;
             bgColor = Color.DarkSlateBlue;
 
             Entity background = new Entity(new Point(Global.worldSize.X/2, Global.worldSize.Y/2).ToVector2());

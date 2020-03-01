@@ -10,32 +10,39 @@ using System.Threading.Tasks;
 namespace EDEN {
     class MainMenu : State {
 
-        public MainMenu(Application _app) : base(_app) {}
+        public MainMenu(Application _app) : base(_app) {
+        }
+
+        int buttonHeight = 30;
+        int buttonWidth = 200;
 
         //Make button
         //Pass in position, size, text
 
-        public List<Component> buttons = new List<Component>();
-        public Button startButton;
-        public Button quitButton;
-
         public override void Start() {
             //set background
             bgColor = Color.DarkOliveGreen;
-            //make start button
-            startButton = new Button(200, 30, Color.White, new Vector2(400, 400), "New Simulation", () => {
+
+            Vector2 position = new Vector2(app.screenSize.X / 2, (app.screenSize.Y / 2) - buttonHeight * 2.4f);
+
+            //Start button
+            AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "New Simulation", () => {
+                app.SwitchState(new SimMenu(app)); 
+            }));
+
+            position.Y += buttonHeight * 1.4f;
+
+            //Controls button
+            AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "New Simulation", () => {
                 app.SwitchState(new Simulation(app)); 
-            });
-            buttons.Add(startButton);
-            components.Add(startButton);
+            }));
 
+            position.Y += buttonHeight * 1.4f;
 
-            //quit button
-            quitButton = new Button(200,30, Color.White, new Vector2(400, 500), "Quit", () => { 
+            //Quit button
+            AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Quit", () => { 
                 System.Environment.Exit(1); 
-            });
-            buttons.Add(quitButton);
-            components.Add(quitButton);
+            }));
         }
         
             

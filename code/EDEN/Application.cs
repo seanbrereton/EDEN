@@ -13,7 +13,7 @@ namespace EDEN {
         public static SpriteFont font;
 
         bool fullscreen = false;
-        public static Vector2 screenSize = new Vector2(1600, 900);
+        public Vector2 screenSize = new Vector2(1600, 900);
 
         public static State activeState;
 
