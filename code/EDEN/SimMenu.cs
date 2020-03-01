@@ -48,7 +48,10 @@ namespace EDEN {
             position.Y += 50;
 
             //Env size
-            envSize = new NumInput("Environment size",);
+            envSize = new NumInput("Environment size", 1500, 500, 2500, position, 250);
+            AddComponent(envSize);
+
+            position.Y += 50;
 
             //H20 ratio
 
