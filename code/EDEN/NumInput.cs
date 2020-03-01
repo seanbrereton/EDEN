@@ -15,7 +15,7 @@ namespace EDEN {
         string text;
 
 
-        public NumInput(string _text, int startingValue, int min, int max, Vector2 pos) : base(pos) {
+        public NumInput(string _text, int startingValue, int min, int max, Vector2 pos, int increment) : base(pos) {
             text = _text;
             texture = Textures.Rect(Color.Gray, 200, 30);
 
@@ -24,11 +24,11 @@ namespace EDEN {
             value = startingValue;
 
             AddComponent(new Button(30, 30, Color.White, new Vector2(position.X +160, position.Y), "+", () => {
-                value = Math.Min(maxValue, value + 1);
+                value = Math.Min(maxValue, value + increment);
             }));
 
             AddComponent(new Button(30, 30 , Color.White, new Vector2(position.X + 120, position.Y), "-", () => {
-                value = Math.Max(minValue, value - 1);
+                value = Math.Max(minValue, value - increment);
             }));
         }
 

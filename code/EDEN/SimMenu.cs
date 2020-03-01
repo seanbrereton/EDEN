@@ -17,8 +17,10 @@ namespace EDEN {
         //Pass in position, size, text
 
         NumInput popNum;
-        //NumInput envSize;
+        NumInput foodSpawn;
+        NumInput envSize;
         NumInput maxEnergy;
+
 
         public override void Start() {
             //set background
@@ -31,28 +33,33 @@ namespace EDEN {
                 app.SwitchState(new Simulation(app));
             }));
 
-            position.Y += 100;
+            position.Y += 50;
 
             //Population
-            popNum = new NumInput("Population", 8, 6, 9, position);
+            popNum = new NumInput("Population", 512, 128, 1024, position, 32);
             AddComponent(popNum);
 
-            position.Y += 100;
+            position.Y += 50;
+            
             //Food ratio
+            foodSpawn = new NumInput("Food spawn", 1024, 64, 2048, position, 64);
+            AddComponent(foodSpawn);
+            
+            position.Y += 50;
 
             //Env size
-            //envSize = new NumInput("Environment size", new Point(1600,1600), new Point(600, 600), new Point();
+            envSize = new NumInput("Environment size",);
 
             //H20 ratio
 
             //Max energy
-            maxEnergy = new NumInput("Max Energy", 96, 48, 192, position);
+            maxEnergy = new NumInput("Max Energy", 96, 48, 192, position, 6);
             AddComponent(maxEnergy);
-
-            //Starter nRg
+            
+            position.Y += 50;
 
             //Layer size??
-            position.Y += 100;
+            position.Y += 50;
 
             AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Start Custom Sim", () => {
                 StartSimulation();
