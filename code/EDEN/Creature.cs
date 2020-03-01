@@ -38,6 +38,8 @@ namespace EDEN {
 
         float perceiveTimer;
         bool allSeeing;
+
+        Settings settings;
                     
         public Creature(Vector2 _position) : base(_position) {
             generation = 0;
@@ -65,6 +67,10 @@ namespace EDEN {
 
             for (int i = 0; i < visionRects.Length; i++)
                 visionRects[i] = new Rectangle(Point.Zero, new Point(viewSize));
+        }
+
+        public override void Start() {
+            settings = ((Simulation)parent).settings;
         }
 
         public override void Update(float deltaTime) {

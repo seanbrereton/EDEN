@@ -45,7 +45,7 @@ namespace EDEN {
             UIspriteBatch.Begin();
 
             base.SuperDraw(spriteBatch, UIspriteBatch);
-            
+
             if (debug)
                 quadTree?.Draw(spriteBatch);
 

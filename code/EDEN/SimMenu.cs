@@ -20,7 +20,7 @@ namespace EDEN {
         NumInput foodSpawn;
         NumInput envSize;
         NumInput maxEnergy;
-        
+
 
 
         public override void Start() {
@@ -29,9 +29,9 @@ namespace EDEN {
 
             Vector2 position = new Vector2(app.screenSize.X / 2, (app.screenSize.Y / 2) - buttonHeight * 2.4f);
 
-            //Random simulation
+            //Default simulation
             AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Random Simulation", () => {
-                app.SwitchState(new Simulation(app));
+                app.SwitchState(new Simulation(app, new Settings()));
             }));
 
             position.Y += 50;
@@ -41,15 +41,15 @@ namespace EDEN {
             AddComponent(popNum);
 
             position.Y += 50;
-            
+
             //Food ratio
             foodSpawn = new NumInput("Food spawn", 1, 0, 2, position, 0.1f);
             AddComponent(foodSpawn);
-            
+
             position.Y += 50;
 
             //Env size
-            envSize = new NumInput("Environment size", 1500, 500, 2500, position, 250);
+            envSize = new NumInput("Environment size", 1600, 320, 3200, position, 64);
             AddComponent(envSize);
 
             position.Y += 50;
@@ -60,19 +60,23 @@ namespace EDEN {
             //Max energy
             maxEnergy = new NumInput("Max Energy", 96, 48, 192, position, 6);
             AddComponent(maxEnergy);
-            
+
             position.Y += 50;
 
             //Layer size??
             position.Y += 50;
 
-            AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Start Custom Sim", () => {
-                StartSimulation();
-            }));
-        }
 
-        void StartSimulation() {
-            app.SwitchState(new Simulation(app));
+            AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Start Custom Sim", () => {
+                Settings customSettings = new Settings(
+                    popNum.value,
+                    foodSpawn.value,
+                    envSize.value,
+                    maxEnergy.value
+                );
+
+                app.SwitchState(new Simulation(app, customSettings));
+            }));
         }
     }
 }

@@ -17,7 +17,6 @@ namespace EDEN {
 
         public static State activeState;
 
-        public static Texture2D[] branchTextures = new Texture2D[17];
 
         public Application() {
             graphics = new GraphicsDeviceManager(this);
@@ -35,8 +34,6 @@ namespace EDEN {
             Textures.Init(this);
             ConfigureScreen();
 
-            for (int i = 0; i < branchTextures.Length; i++)
-                branchTextures[i] = Textures.Rect(Color.Transparent, Global.worldSize.X, Global.worldSize.Y, 2 * (int)(Math.Pow(2, i)), Color.Goldenrod);
 
             activeState = new MainMenu(this);
             

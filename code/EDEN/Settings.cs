@@ -17,17 +17,16 @@ namespace EDEN {
             //Default settings
             population = 256;
             foodDensity = 0.8f;
-            envSize = new Point (800, 800);
+            envSize = new Point (1600, 1600);
             maxEnergy = 96;
         }
 
-        public Settings(int _pop, float _foodDensity, int _envSize, int _maxEnergy) {
+        public Settings(float _pop, float _foodDensity, float _envSize, float _maxEnergy) {
             //Custom settings constructor
-            population = _pop;
+            population = (int)_pop;
             foodDensity = _foodDensity;
-            envSize = new Point(_envSize, _envSize);
-            maxEnergy = _maxEnergy;
+            envSize = new Point((int)_envSize, (int)_envSize);
+            maxEnergy = (int)_maxEnergy;
         }
-        
     }
 }

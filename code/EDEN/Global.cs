@@ -5,7 +5,5 @@ namespace EDEN {
 
         public static int[] layers = new int[] { 13, 12, 12, 4 };
 
-        public static Point worldSize = new Point(1600, 1600);
-
     }
 }   

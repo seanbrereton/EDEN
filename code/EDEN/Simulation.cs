@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -6,33 +7,36 @@ using System.Collections.Generic;
 namespace EDEN {
     class Simulation : State {
 
-        // Settings
-        int minPopulation = 256;
-        int initialPopulation = 256;
-        float foodDensity = 0.8f;
-
+        public Settings settings;
         public Environment environment;
 
         public List<Creature> creatures = new List<Creature>();
         public List<Component> foods = new List<Component>();
+        
+        public static Texture2D[] branchTextures = new Texture2D[17];
 
-        public Simulation(Application _app) : base(_app) {
-            quadTree = new QuadTree(new Rectangle(Point.Zero, Global.worldSize));
+        public Simulation(Application _app, Settings _settings) : base(_app) {
+            settings = _settings;
+
+            for (int i = 0; i < branchTextures.Length; i++)
+                branchTextures[i] = Textures.Rect(Color.Transparent, settings.envSize.X, settings.envSize.Y, 2 * (int)(Math.Pow(2, i)), Color.Goldenrod);
+            
+            quadTree = new QuadTree(new Rectangle(Point.Zero, settings.envSize), 0, branchTextures);
         }
 
         public override void Start() {
             bgColor = Color.DodgerBlue;
 
             camera.locked = false;
-            environment = new Environment(Global.worldSize.ToVector2() / 2, Global.worldSize, 16, 0.6f, 9);
+            environment = new Environment(settings.envSize.ToVector2() / 2, settings.envSize, 16, 0.6f, 9);
             AddComponent(environment);
 
             // Spawn starting food (TEMP)
-            for (int i = 0; i < (int)(initialPopulation * foodDensity); i++)
+            for (int i = 0; i < (int)(settings.population * settings.foodDensity); i++)
                 SpawnNewFood();
             
             // Spawn initial population
-            for (int i = 0; i < initialPopulation; i++) {
+            for (int i = 0; i < settings.population; i++) {
                 SpawnNewCreature();
             }
         }
@@ -59,9 +63,9 @@ namespace EDEN {
 
             Console.WriteLine("===\nPop: " + creatures.Count + "\nKid: " + highestChildren + "\nAge: " + highestAge);
 
-            while (creatures.Count < minPopulation)
+            while (creatures.Count < settings.population)
                 SpawnNewCreature();
-            while (foods.Count < (int)(initialPopulation * foodDensity))
+            while (foods.Count < (int)(settings.population * settings.foodDensity))
                 SpawnNewFood();
         }
 
@@ -72,7 +76,7 @@ namespace EDEN {
             return newCreature;
         }
         public Creature SpawnNewCreature() {
-            return SpawnNewCreature(Rand.Range(Global.worldSize.ToVector2()));
+            return SpawnNewCreature(Rand.Range(settings.envSize.ToVector2()));
         }
 
         public void SpawnNewFood(Vector2 position) {
@@ -83,7 +87,7 @@ namespace EDEN {
             }
         }
         public void SpawnNewFood() {
-            SpawnNewFood(Rand.Range(Global.worldSize.ToVector2()));
+            SpawnNewFood(Rand.Range(settings.envSize.ToVector2()));
         }
 
         public override void HandleInput() {

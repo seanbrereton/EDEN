@@ -18,12 +18,14 @@ namespace EDEN {
         QuadTree[] branches = new QuadTree[4];
         int level;
 
+        Texture2D[] branchTextures;
         Texture2D texture;
         
-        public QuadTree(Rectangle _bounds, int _level = 0) {
+        public QuadTree(Rectangle _bounds, int _level, Texture2D[] _branchTextures) {
             bounds = _bounds;
             level = _level;
-            texture = Application.branchTextures[level];
+            branchTextures = _branchTextures;
+            texture = branchTextures[level];
         }
 
         public void CheckCollisions(List<Entity> toCheck) {
@@ -69,10 +71,10 @@ namespace EDEN {
             int x = bounds.X;
             int y = bounds.Y;
 
-            branches[0] = new QuadTree(new Rectangle(x, y, width, height), level + 1);
-            branches[1] = new QuadTree(new Rectangle(x+width, y, width, height), level + 1);
-            branches[2] = new QuadTree(new Rectangle(x+width, y+height, width, height), level + 1);
-            branches[3] = new QuadTree(new Rectangle(x, y+height, width, height), level + 1);
+            branches[0] = new QuadTree(new Rectangle(x, y, width, height), level + 1, branchTextures);
+            branches[1] = new QuadTree(new Rectangle(x+width, y, width, height), level + 1, branchTextures);
+            branches[2] = new QuadTree(new Rectangle(x+width, y+height, width, height), level + 1, branchTextures);
+            branches[3] = new QuadTree(new Rectangle(x, y+height, width, height), level + 1, branchTextures);
 
             List<Entity> oldEntities = new List<Entity>(entities);
             entities.Clear();
