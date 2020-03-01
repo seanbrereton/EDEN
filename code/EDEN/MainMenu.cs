@@ -32,8 +32,8 @@ namespace EDEN {
 
             position.Y += buttonHeight * 1.4f;
 
-            //Controls button
-            AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "New Simulation", () => {
+            //Load button
+            AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Load Simulation", () => {
                 app.SwitchState(new Simulation(app)); 
             }));
 

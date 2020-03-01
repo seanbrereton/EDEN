@@ -9,13 +9,13 @@ using Microsoft.Xna.Framework.Graphics;
 namespace EDEN {
     class NumInput : Entity {
 
-        int minValue;
-        int maxValue;
-        public int value;
+        float minValue;
+        float maxValue;
+        public float value;
         string text;
 
 
-        public NumInput(string _text, int startingValue, int min, int max, Vector2 pos, int increment) : base(pos) {
+        public NumInput(string _text, float startingValue, float min, float max, Vector2 pos, float increment) : base(pos) {
             text = _text;
             texture = Textures.Rect(Color.Gray, 200, 30);
 
@@ -24,11 +24,11 @@ namespace EDEN {
             value = startingValue;
 
             AddComponent(new Button(30, 30, Color.White, new Vector2(position.X +160, position.Y), "+", () => {
-                value = Math.Min(maxValue, value + increment);
+                value = Math.Min(maxValue, (float)Math.Round((double)value, 1) + increment);
             }));
 
             AddComponent(new Button(30, 30 , Color.White, new Vector2(position.X + 120, position.Y), "-", () => {
-                value = Math.Max(minValue, value - increment);
+                    value = Math.Max(minValue, (float)Math.Round((double)value, 1) - increment);
             }));
         }
 

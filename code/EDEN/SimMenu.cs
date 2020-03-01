@@ -20,6 +20,7 @@ namespace EDEN {
         NumInput foodSpawn;
         NumInput envSize;
         NumInput maxEnergy;
+        
 
 
         public override void Start() {
@@ -36,13 +37,13 @@ namespace EDEN {
             position.Y += 50;
 
             //Population
-            popNum = new NumInput("Population", 512, 128, 1024, position, 32);
+            popNum = new NumInput("Population", 256, 128, 1024, position, 32);
             AddComponent(popNum);
 
             position.Y += 50;
             
             //Food ratio
-            foodSpawn = new NumInput("Food spawn", 1024, 64, 2048, position, 64);
+            foodSpawn = new NumInput("Food spawn", 1, 0, 2, position, 0.1f);
             AddComponent(foodSpawn);
             
             position.Y += 50;
@@ -53,7 +54,8 @@ namespace EDEN {
 
             position.Y += 50;
 
-            //H20 ratio
+            //Water
+
 
             //Max energy
             maxEnergy = new NumInput("Max Energy", 96, 48, 192, position, 6);
