@@ -3,9 +3,9 @@
 namespace EDEN {
     public static class Global {
 
-        public static int[] layers = new int[] { 13, 4 };
+        public static int[] layers = new int[] { 13, 12, 12, 4 };
 
-        public static Point worldSize = new Point(2400, 2400);
+        public static Point worldSize = new Point(800, 800);
 
     }
-}
+}   

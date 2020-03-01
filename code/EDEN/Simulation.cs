@@ -7,8 +7,8 @@ namespace EDEN {
     class Simulation : State {
 
         // Settings
-        int minPopulation = 512;
-        int initialPopulation = 512;
+        int minPopulation = 256;
+        int initialPopulation = 256;
         float foodDensity = 0.8f;
 
         public Environment environment;
@@ -23,6 +23,7 @@ namespace EDEN {
         public override void Start() {
             bgColor = Color.DodgerBlue;
 
+            camera.locked = false;
             environment = new Environment(Global.worldSize.ToVector2() / 2, Global.worldSize, 16, 0.56f, 9);
             AddComponent(environment);
 
