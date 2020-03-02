@@ -28,7 +28,7 @@ namespace EDEN {
 
         public static Point MouseWorldPos {
             get {
-                Matrix invertedMatrix = Matrix.Invert(camera.Transform);
+                Matrix invertedMatrix = Matrix.Invert(camera.transform);
                 return Vector2.Transform(MousePos.ToVector2(), invertedMatrix).ToPoint();
             }
         }

@@ -39,23 +39,22 @@ namespace EDEN {
         float perceiveTimer;
         bool allSeeing;
 
+        Simulation simulation;
         Settings settings;
-                    
+
         public Creature(Vector2 _position) : base(_position) {
             generation = 0;
             color = Rand.RandColor();
             network = new NeuralNet(Global.layers);
-            Initialize();
         }
 
         public Creature(Vector2 _position, Color _color, NeuralNet _network, int _generation) : base(_position) {
             generation = _generation;
             color = _color;
             network = _network;
-            Initialize();
         }
 
-        public void Initialize() {
+        public override void Start() {
             dynamic = true;
 
             texture = Textures.Circle(Color.White, radius, 4);
@@ -67,10 +66,9 @@ namespace EDEN {
 
             for (int i = 0; i < visionRects.Length; i++)
                 visionRects[i] = new Rectangle(Point.Zero, new Point(viewSize));
-        }
 
-        public override void Start() {
-            settings = ((Simulation)parent).settings;
+            simulation = ((Simulation)parent);
+            settings = simulation.settings;
         }
 
         public override void Update(float deltaTime) {
@@ -106,8 +104,8 @@ namespace EDEN {
 
         void Die() {
             parent.AddComponent(new Food(position, color));
+            simulation.creatures.Remove(this);
             Remove();
-            ((Simulation)parent).creatures.Remove(this);
         }
 
         void Think() {
@@ -195,9 +193,8 @@ namespace EDEN {
         }
 
         public override void HandleInput() {
-            if (Input.Press(Microsoft.Xna.Framework.Input.Keys.P)) {
-                allSeeing = !allSeeing;
-            }
+            if (Input.Click() && rect.Contains(Input.MouseWorldPos))
+                simulation.targeted = this;
         }
 
         public override void Collides(Entity entity) {
@@ -231,7 +228,7 @@ namespace EDEN {
             int newGeneration = Math.Max(generation, other.generation) + 1;
 
             Creature newCreature = new Creature(position, newColor, newNetwork, newGeneration);
-            ((Simulation)parent).creatures.Add(newCreature);
+            simulation.creatures.Add(newCreature);
             parent.AddComponent(newCreature);
         }
 
@@ -243,9 +240,6 @@ namespace EDEN {
 
             spriteBatch.Draw(eyeTexture, leftEyeRect, Color.White);
             spriteBatch.Draw(eyeTexture, rightEyeRect, Color.White);
-            /*spriteBatch.Draw(eyeTexture, visionRects[0], Color.White);
-            spriteBatch.Draw(eyeTexture, visionRects[1], Color.White);
-*/
         }
     }
 }

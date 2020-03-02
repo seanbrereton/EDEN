@@ -41,7 +41,7 @@ namespace EDEN {
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
             app.GraphicsDevice.Clear(bgColor);
             
-            spriteBatch.Begin(transformMatrix: camera.Transform);
+            spriteBatch.Begin(transformMatrix: camera.transform);
             UIspriteBatch.Begin();
 
             base.SuperDraw(spriteBatch, UIspriteBatch);

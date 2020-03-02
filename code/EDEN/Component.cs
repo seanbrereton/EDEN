@@ -11,6 +11,7 @@ namespace EDEN {
         public List<Component> components = new List<Component>();
         public List<Component> toAdd = new List<Component>();
         public List<Component> toRemove = new List<Component>();
+        public Vector2 position;
 
         public List<Component> GetChildComponents() {
             List<Component> childComponents = new List<Component>(components);
@@ -27,6 +28,7 @@ namespace EDEN {
 
         public void AddComponent(Component component) {
             component.parent = this;
+            component.SuperStart();
             toAdd.Add(component);
         }
 

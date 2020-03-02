@@ -10,7 +10,6 @@ namespace EDEN {
         Color highlightColor;
         Texture2D highlightTexture;
 
-        public Vector2 position;
         public float rotation;
         public float scale = 1;
 

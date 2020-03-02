@@ -30,7 +30,7 @@ namespace EDEN {
             Vector2 position = new Vector2(app.screenSize.X / 2, (app.screenSize.Y / 2) - buttonHeight * 2.4f);
 
             //Default simulation
-            AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Random Simulation", () => {
+            AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Default Simulation", () => {
                 app.SwitchState(new Simulation(app, new Settings()));
             }));
 
