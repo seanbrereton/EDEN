@@ -37,15 +37,16 @@ namespace EDEN {
         Rectangle rightEyeRect;
 
         float perceiveTimer;
-        bool allSeeing;
 
         Simulation simulation;
         Settings settings;
 
+        int[] layers = new int[] { 13, 12, 12, 4 };
+
         public Creature(Vector2 _position) : base(_position) {
             generation = 0;
             color = Rand.RandColor();
-            network = new NeuralNet(Global.layers);
+            network = new NeuralNet(layers);
         }
 
         public Creature(Vector2 _position, Color _color, NeuralNet _network, int _generation) : base(_position) {

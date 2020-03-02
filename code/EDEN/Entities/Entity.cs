@@ -35,7 +35,7 @@ namespace EDEN {
         // A position directly in front of the entity, based on current rotation and position
         public Vector2 Forward {
             get {
-                double rads = MathHelper.DegreeToRadian(rotation);
+                double rads = Math.PI * rotation / 180f;
                 float x = (float)Math.Sin(rads);
                 float y = (float)Math.Cos(rads);
                 return new Vector2(x, y);

@@ -14,7 +14,7 @@ namespace EDEN {
         public Color bgColor;
         public QuadTree quadTree;
         public bool debug;
-        public float gameSpeed = 1;
+        public float runSpeed = 1;
 
         public State(Application _app) {
             app = _app;
@@ -35,7 +35,7 @@ namespace EDEN {
             List<Entity> childEntities = quadTree?.UpdateEntities(childComponents);
             quadTree?.CheckCollisions(childEntities);
 
-            base.SuperUpdate(deltaTime * gameSpeed);
+            base.SuperUpdate(deltaTime * runSpeed);
         }
 
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {

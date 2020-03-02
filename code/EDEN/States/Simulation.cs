@@ -101,9 +101,9 @@ namespace EDEN {
                 debug = !debug;
 
             if (Input.Press(Keys.OemCloseBrackets))
-                gameSpeed += 0.5f;
+                runSpeed += 0.5f;
             if (Input.Press(Keys.OemOpenBrackets))
-                gameSpeed -= 0.5f;
+                runSpeed -= 0.5f;
         }
     }
 }
