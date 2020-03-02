@@ -22,9 +22,9 @@ namespace EDEN {
                 for (int y = 0; y < diameter; y++) {
                     int i = x * diameter + y;
                     Vector2 pos = new Vector2(x - radius, y - radius);
-                    if (pos.Length() > radius)
+                    if (pos.Length() >= radius)
                         colors[i] = Color.Transparent;
-                    else if (pos.Length() > radius - outlineWidth)
+                    else if (pos.Length() >= radius - outlineWidth)
                         colors[i] = outlineColor;
                     else
                         colors[i] = color;
@@ -46,7 +46,7 @@ namespace EDEN {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     int i = y * width + x;
-                    if (x < outlineWidth || width - x < outlineWidth || y < outlineWidth || height - y < outlineWidth)
+                    if (x < outlineWidth || width - x <= outlineWidth || y < outlineWidth || height - y <= outlineWidth)
                         colors[i] = outlineColor;
                     else
                         colors[i] = color;

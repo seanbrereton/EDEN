@@ -31,7 +31,7 @@ namespace EDEN {
         int viewSize = 96;
         Rectangle[] visionRects = new Rectangle[2];
 
-        int radius = 8;
+        int radius = 16;
         Texture2D eyeTexture;
         Rectangle leftEyeRect;
         Rectangle rightEyeRect;
@@ -58,9 +58,9 @@ namespace EDEN {
             dynamic = true;
 
             texture = Textures.Circle(Color.White, radius, 4);
-            eyeTexture = Textures.Circle(Color.Black, radius, radius / 2, Color.White);
+            eyeTexture = Textures.Circle(Color.Black, radius / 3, radius / 6, Color.White);
 
-            scale = 0.2f;
+            scale = 0.1f;
             rotation = Rand.Range(360);
             energy = maxEnergy / 2;
 
@@ -86,8 +86,8 @@ namespace EDEN {
             reproductionTimer -= deltaTime;
             age += deltaTime;
 
-            if (scale < 1)
-                scale += 0.1f * deltaTime;
+            if (scale < 0.5f)
+                scale += 0.05f * deltaTime;
         }
 
         void Act(float deltaTime) {
@@ -208,7 +208,7 @@ namespace EDEN {
             } else if (entity is Creature) {
                 touchingCreature = 1;
                 Creature creature = (Creature)entity;
-                if (toMate > 0 && scale >= 1 && reproductionTimer < 0 && creature.toMate > 0 && creature.scale >= 1 && creature.reproductionTimer < 0)
+                if (toMate > 0 && scale >= 0.5f && reproductionTimer < 0 && creature.toMate > 0 && creature.scale >= 0.5f && creature.reproductionTimer < 0)
                     Reproduce(creature);
             }
         }

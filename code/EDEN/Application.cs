@@ -35,7 +35,7 @@ namespace EDEN {
             ConfigureScreen();
 
 
-            activeState = new Simulation(this, new Settings());
+            activeState = new MainMenu(this);
             
             activeState.SuperStart();
 
