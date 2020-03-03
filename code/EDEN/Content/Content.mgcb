@@ -20,3 +20,8 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Font.spritefont
 
+#begin nounlist.txt
+/importer:
+/processor:
+/build:nounlist.txt
+
