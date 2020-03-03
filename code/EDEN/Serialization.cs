@@ -17,7 +17,8 @@ namespace EDEN {
 
         public static void SaveState(Simulation toSave) {
             using (SaveFileDialog dialog = new SaveFileDialog()) {
-                dialog.InitialDirectory = "C:\\";
+                string initialDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..\\saves");
+                dialog.InitialDirectory = Path.GetFullPath(initialDirectory);
                 dialog.Filter = "Save State|*.bin";
                 dialog.Title = "Save Simulation State";
                 dialog.ShowDialog();
@@ -29,10 +30,10 @@ namespace EDEN {
 
         public static void LoadState(Application app) {
             using (OpenFileDialog dialog = new OpenFileDialog()) {
-                dialog.InitialDirectory = "C:\\";
+                string initialDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..\\saves");
+                dialog.InitialDirectory = Path.GetFullPath(initialDirectory);
                 dialog.Filter = "Save State|*.bin";
                 dialog.Title = "Load Simulation State";
-                // ? dialog.RestoreDirectory = true;
 
                 if (dialog.ShowDialog() == DialogResult.OK) {
                     app.SwitchState(ReadBinaryFile(dialog.FileName).ToSimulation(app));
