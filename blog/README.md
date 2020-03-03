@@ -1,1 +1,1 @@
-[Blog](https://seanbrereton.github.io/)
+[https://seanbrereton.github.io/](https://seanbrereton.github.io/)
