@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
 namespace EDEN {
-    class Settings {
+    [Serializable]
+    public class Settings {
 
         public int population;
         public float foodDensity;
-        public Point envSize;
+        public int envSize;
         public int maxEnergy;
 
         public Settings() {
             //Default settings
             population = 256;
             foodDensity = 0.8f;
-            envSize = new Point (1600, 1600);
+            envSize = 1600;
             maxEnergy = 96;
         }
 
@@ -25,7 +26,7 @@ namespace EDEN {
             //Custom settings constructor
             population = (int)_pop;
             foodDensity = _foodDensity;
-            envSize = new Point((int)_envSize, (int)_envSize);
+            envSize = (int)_envSize;
             maxEnergy = (int)_maxEnergy;
         }
     }

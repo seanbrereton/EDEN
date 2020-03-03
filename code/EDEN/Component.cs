@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace EDEN {
+    
     public class Component {
 
         public bool UI;
@@ -59,7 +61,7 @@ namespace EDEN {
 
         public virtual void Draw(SpriteBatch spriteBatch) { }
         public virtual void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
-            Draw(UI ? UIspriteBatch : spriteBatch);
+            Draw(this is UI ? UIspriteBatch : spriteBatch);
 
             foreach (Component component in components)
                 component.SuperDraw(spriteBatch, UIspriteBatch);

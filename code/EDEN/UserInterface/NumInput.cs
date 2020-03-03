@@ -7,17 +7,17 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace EDEN {
-    class NumInput : Entity {
+    class NumInput : UI {
 
         float minValue;
         float maxValue;
         public float value;
-        string text;
+        string displayName;
 
+        public NumInput(string _displayName, float startingValue, float min, float max, Vector2 pos, float increment) : base(pos) {
+            texture = Textures.Rect(Color.White, 1, 1);
 
-        public NumInput(string _text, float startingValue, float min, float max, Vector2 pos, float increment) : base(pos) {
-            text = _text;
-            texture = Textures.Rect(Color.Gray, 200, 30);
+            displayName = _displayName;
 
             minValue = min;
             maxValue = max;
@@ -28,15 +28,12 @@ namespace EDEN {
             }));
 
             AddComponent(new Button(30, 30 , Color.White, new Vector2(position.X + 120, position.Y), "-", () => {
-                    value = Math.Max(minValue, (float)Math.Round((double)value, 1) - increment);
+                value = Math.Max(minValue, (float)Math.Round((double)value, 1) - increment);
             }));
         }
 
-        public override void Draw(SpriteBatch spriteBatch) {
-            string display = text + ": " + value.ToString();
-            float x = (rect.X + (rect.Width / 2)) - (Application.font.MeasureString(display).X / 2);
-            float y = (rect.Y + (rect.Height / 2)) - (Application.font.MeasureString(display).Y / 2);
-            spriteBatch.DrawString(Application.font, display, new Vector2(x, y), Color.Black);
+        public override void Update(float deltaTime) {
+            text = displayName + ": " + value.ToString();
         }
     }
 }

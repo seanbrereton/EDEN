@@ -7,14 +7,17 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace EDEN {
+    
     public class State : Component {
-
+        
+        [NonSerialized]
         public Application app;
+
         public Camera camera;
         public Color bgColor;
         public QuadTree quadTree;
         public bool debug;
-        public float runSpeed = 1;
+        public float runSpeed = 0.2f;
 
         public State(Application _app) {
             app = _app;
@@ -41,16 +44,16 @@ namespace EDEN {
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
             app.GraphicsDevice.Clear(bgColor);
             
+            UIspriteBatch.Begin(samplerState: SamplerState.PointClamp);
             spriteBatch.Begin(transformMatrix: camera.transform, samplerState: SamplerState.PointClamp);
-            UIspriteBatch.Begin();
 
             base.SuperDraw(spriteBatch, UIspriteBatch);
 
             if (debug)
                 quadTree?.Draw(spriteBatch);
 
-            UIspriteBatch.End();
             spriteBatch.End();
+            UIspriteBatch.End();
         }
 
     }

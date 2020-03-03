@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace EDEN {
+    
     public class QuadTree {
 
         int maxEntities = 6;

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace EDEN {
+    
     public class Entity : Component {
 
         public Texture2D texture;
@@ -16,6 +17,8 @@ namespace EDEN {
         public Rectangle rect;
 
         public bool dynamic;
+
+        public Entity() { }
 
         public Entity(Vector2 _position) {
             position = _position;
@@ -70,11 +73,11 @@ namespace EDEN {
 
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
             rect = GetRect();
-            (UI ? UIspriteBatch : spriteBatch).Draw(texture, rect, color);
+            (this is UI ? UIspriteBatch : spriteBatch).Draw(texture, rect, color);
             if (highlightTexture != null && highlightColor != Color.Transparent) {
                 Rectangle highlightRect = new Rectangle(rect.Location, rect.Size);
                 highlightRect.Inflate(rect.Width / 2, rect.Height / 2);
-                (UI ? UIspriteBatch : spriteBatch).Draw(highlightTexture, highlightRect, highlightColor);
+                (this is UI ? UIspriteBatch : spriteBatch).Draw(highlightTexture, highlightRect, highlightColor);
                 highlightColor = Color.Transparent;
             }
 

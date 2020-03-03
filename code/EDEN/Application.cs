@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 
 namespace EDEN {
+    
     public class Application : Game {
         public static GraphicsDeviceManager graphics;
 
@@ -16,7 +17,7 @@ namespace EDEN {
         public Vector2 screenSize = new Vector2(1600, 900);
 
         public static State activeState;
-
+        
 
         public Application() {
             graphics = new GraphicsDeviceManager(this);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 namespace EDEN {
+    [Serializable]
     public class NeuralNet {
 
         int[] layers;
@@ -44,7 +45,7 @@ namespace EDEN {
             weights = weightList.ToArray();
         }
 
-        public NeuralNet (NeuralNet net1, NeuralNet net2) {
+        public NeuralNet (NeuralNet net1, NeuralNet net2, float mutationRate) {
             NeuralNet[] parents = { net1, net2 };
             layers = new int[net1.layers.Length];
             List<float[]> neuronList = new List<float[]>();
@@ -59,11 +60,16 @@ namespace EDEN {
 
                 for (int j = 0; j < layers[i]; j++) {
                     bias[j] = Rand.Choice(parents).biases[i][j];
+                    if (Rand.Range(1f) < mutationRate)
+                        bias[j] = Math.Max(-0.5f, Math.Min(0.5f, bias[j] + Rand.Range(-0.1f, 0.1f)));
 
                     if (i > 0) {
                         float[] neuronWeights = new float[layers[i - 1]];
-                        for (int k = 0; k < layers[i - 1]; k++)
+                        for (int k = 0; k < layers[i - 1]; k++) {
                             neuronWeights[k] = Rand.Choice(parents).weights[i-1][j][k];
+                            if (Rand.Range(1f) < mutationRate)
+                                neuronWeights[k] = Math.Max(-0.5f, Math.Min(0.5f, neuronWeights[k] + Rand.Range(-0.1f, 0.1f)));
+                        }
                         layerWeightList.Add(neuronWeights);
                     }
                 }

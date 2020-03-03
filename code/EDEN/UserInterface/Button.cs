@@ -8,10 +8,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace EDEN {
-    class Button : Entity {
+    
+    class Button : UI {
 
-        public string text;
-        public Color fontColor = Color.Black;
         public Color hoverColor = Color.Gray;
         public Color defaultColor;
         public Action action;
@@ -40,17 +39,6 @@ namespace EDEN {
 
             if (IsPressed())
                 action();
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            if(!string.IsNullOrEmpty(text)) {
-                float x = (rect.X + (rect.Width / 2)) - (Application.font.MeasureString(text).X / 2);
-                float y = (rect.Y + (rect.Height / 2)) - (Application.font.MeasureString(text).Y / 2);
-
-                spriteBatch.DrawString(Application.font, text, new Vector2(x, y), fontColor);
-
-            }
         }
 
     }

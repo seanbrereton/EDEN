@@ -8,7 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace EDEN {
-    class Environment : Entity {
+    
+    public class Environment : Entity {
 
         Point size;
         int gridSize;
@@ -48,7 +49,7 @@ namespace EDEN {
             Smooth(smoothLevel);
         }
 
-        void GenerateTexture() { 
+        public void GenerateTexture() { 
             Color[] colors = new Color[size.X * size.Y];
 
             for (int x = 0; x < size.X; x++)
@@ -97,29 +98,6 @@ namespace EDEN {
             tiles = baseTiles;
             SmoothTiles(times);
             GenerateTexture();
-        }
-
-        public override void HandleInput() {
-            if (Input.Press(Keys.E))
-                Generate();
-            if (Input.Press(Keys.D1))
-                Smooth(1);
-            if (Input.Press(Keys.D2))
-                Smooth(2);
-            if (Input.Press(Keys.D3))
-                Smooth(3);
-            if (Input.Press(Keys.D4))
-                Smooth(4);
-            if (Input.Press(Keys.D5))
-                Smooth(5);
-            if (Input.Press(Keys.D6))
-                Smooth(6);
-            if (Input.Press(Keys.D7))
-                Smooth(7);
-            if (Input.Press(Keys.D8))
-                Smooth(8);
-            if (Input.Press(Keys.D9))
-                Smooth(9);
         }
 
     }

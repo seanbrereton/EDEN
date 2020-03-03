@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 
 namespace EDEN {
+    
     public class Creature : Entity {
 
         public NeuralNet network;
+        float mutationRate = 0.05f;
 
         // Network Inputs
         float[] foodSeen = new float[3];
@@ -33,26 +35,35 @@ namespace EDEN {
 
         int radius = 16;
         Texture2D eyeTexture;
-        Rectangle leftEyeRect;
-        Rectangle rightEyeRect;
 
         float perceiveTimer;
 
         Simulation simulation;
-        Settings settings;
+
+        public string name;
 
         int[] layers = new int[] { 13, 12, 12, 4 };
 
-        public Creature(Vector2 _position) : base(_position) {
+        public Creature() {}
+
+        public Creature(Vector2 _position, string _name) : base(_position) {
+            name = _name;
             generation = 0;
             color = Rand.RandColor();
             network = new NeuralNet(layers);
+            energy = maxEnergy / 2;
+            scale = 0.1f;
+            rotation = Rand.Range(360);
         }
 
-        public Creature(Vector2 _position, Color _color, NeuralNet _network, int _generation) : base(_position) {
+        public Creature(Vector2 _position, string _name, Color _color, NeuralNet _network, int _generation) : base(_position) {
+            name = _name;
             generation = _generation;
             color = _color;
             network = _network;
+            energy = maxEnergy / 2;
+            scale = 0.1f;
+            rotation = Rand.Range(360);
         }
 
         public override void Start() {
@@ -61,19 +72,14 @@ namespace EDEN {
             texture = Textures.Circle(Color.White, radius, 4);
             eyeTexture = Textures.Circle(Color.Black, radius / 3, radius / 6, Color.White);
 
-            scale = 0.1f;
-            rotation = Rand.Range(360);
-            energy = maxEnergy / 2;
-
             for (int i = 0; i < visionRects.Length; i++)
                 visionRects[i] = new Rectangle(Point.Zero, new Point(viewSize));
 
             simulation = ((Simulation)parent);
-            settings = simulation.settings;
         }
 
         public override void Update(float deltaTime) {
-            if (perceiveTimer <= 0f || allSeeing) {
+            if (perceiveTimer <= 0f) {
                 Perceive();
                 perceiveTimer = 0.05f;
             }
@@ -87,8 +93,10 @@ namespace EDEN {
             reproductionTimer -= deltaTime;
             age += deltaTime;
 
-            if (scale < 0.5f)
+            if (scale < 0.5f) {
                 scale += 0.05f * deltaTime;
+                energy -= deltaTime;
+            }
         }
 
         void Act(float deltaTime) {
@@ -97,14 +105,14 @@ namespace EDEN {
         }
 
         void UseEnergy(float deltaTime) {
-            energy -= deltaTime * (1 + Math.Abs(movement) * 2 + touchingWater * 4);
+            energy -= deltaTime * (1 + Math.Abs(movement) * 2) * (Math.Max(1, touchingWater * 4));
 
             if (energy <= 0)
                 Die();
         }
 
         void Die() {
-            parent.AddComponent(new Food(position, color));
+            parent.AddComponent(new Food(position, color, maxEnergy / 16));
             simulation.creatures.Remove(this);
             Remove();
         }
@@ -195,21 +203,26 @@ namespace EDEN {
 
         public override void HandleInput() {
             if (Input.Click() && rect.Contains(Input.MouseWorldPos))
-                simulation.targeted = this;
+                Target();
+        }
+
+        public void Target() {
+            simulation.targeted = this;
         }
 
         public override void Collides(Entity entity) {
             if (entity is Food) {
                 touchingFood = 1;
-                if (toEat > 0 && energy <= maxEnergy - 1) {
-                    energy += 8;
-                    ((Simulation)parent).foods.Remove(entity);
+                if (toEat > 0 && energy < maxEnergy) {
+                    energy += ((Food)entity).energy;
+                    simulation.foods.Remove(entity);
                     entity.Remove();
                 }
             } else if (entity is Creature) {
                 touchingCreature = 1;
                 Creature creature = (Creature)entity;
-                if (toMate > 0 && scale >= 0.5f && reproductionTimer < 0 && creature.toMate > 0 && creature.scale >= 0.5f && creature.reproductionTimer < 0)
+                if (toMate > 0 && scale >= 0.5f && reproductionTimer < 0 && creature.toMate > -0.5 && creature.scale >= 0.5f
+                    && energy > 9 * maxEnergy / 32 && creature.energy > 9 * maxEnergy / 32)
                     Reproduce(creature);
             }
         }
@@ -218,17 +231,23 @@ namespace EDEN {
             childrenCount += 1;
             other.childrenCount += 1;
 
-            reproductionTimer = 16;
-            other.reproductionTimer = 16;
+            reproductionTimer = 8;
+            other.reproductionTimer = 8;
 
-            energy -= maxEnergy / 3;
-            other.energy -= maxEnergy / 3;
+            energy -= maxEnergy / 4;
+            other.energy -= maxEnergy / 4;
 
-            NeuralNet newNetwork = new NeuralNet(network, other.network);
+            NeuralNet newNetwork = new NeuralNet(network, other.network, mutationRate);
             Color newColor = Color.Lerp(color, other.color, 0.5f);
             int newGeneration = Math.Max(generation, other.generation) + 1;
 
-            Creature newCreature = new Creature(position, newColor, newNetwork, newGeneration);
+            int firstEnd = Math.Max(0, Math.Min(name.Length, name.Length / 2 + Rand.Range(-1, 1)));
+            string firstHalf = name.Substring(0, firstEnd);
+            int secondStart = Math.Max(0, Math.Min(other.name.Length, other.name.Length / 2 + Rand.Range(-1, 1)));
+            string secondHalf = other.name.Substring(secondStart, other.name.Length - secondStart);
+            string newName = firstHalf + secondHalf;
+
+            Creature newCreature = new Creature(position, newName, newColor, newNetwork, newGeneration);
             simulation.creatures.Add(newCreature);
             parent.AddComponent(newCreature);
         }
@@ -236,8 +255,8 @@ namespace EDEN {
         public override void Draw(SpriteBatch spriteBatch) {
             Point leftEyePos = (position + (Forward * (rect.Width * 0.35f)) + (Right * (rect.Width * 0.3f))).ToPoint();
             Point rightEyePos = (position + (Forward * (rect.Width * 0.35f)) - (Right * (rect.Width * 0.3f))).ToPoint();
-            leftEyeRect = new Rectangle(leftEyePos.X - rect.Width / 6, leftEyePos.Y - rect.Height / 6, rect.Width / 3, rect.Height / 3);
-            rightEyeRect = new Rectangle(rightEyePos.X - rect.Width / 6, rightEyePos.Y - rect.Height / 6, rect.Width / 3, rect.Height / 3);
+            Rectangle leftEyeRect = new Rectangle(leftEyePos.X - rect.Width / 6, leftEyePos.Y - rect.Height / 6, rect.Width / 3, rect.Height / 3);
+            Rectangle rightEyeRect = new Rectangle(rightEyePos.X - rect.Width / 6, rightEyePos.Y - rect.Height / 6, rect.Width / 3, rect.Height / 3);
 
             spriteBatch.Draw(eyeTexture, leftEyeRect, Color.White);
             spriteBatch.Draw(eyeTexture, rightEyeRect, Color.White);
