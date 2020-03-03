@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 
@@ -12,7 +13,11 @@ namespace EDEN {
 
         public static SimulationSave ReadBinaryFile(string filePath) {
             using (Stream stream = File.Open(filePath, FileMode.Open))
-                return (SimulationSave)new BinaryFormatter().Deserialize(stream);
+                try {
+                    return (SimulationSave)new BinaryFormatter().Deserialize(stream);
+                } catch {
+                    return null;
+                }
         }
 
         public static void SaveState(Simulation toSave) {
@@ -28,7 +33,7 @@ namespace EDEN {
             }
         }
 
-        public static void LoadState(Application app) {
+        public static bool LoadState(Application app) {
             using (OpenFileDialog dialog = new OpenFileDialog()) {
                 string initialDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..\\saves");
                 dialog.InitialDirectory = Path.GetFullPath(initialDirectory);
@@ -36,9 +41,15 @@ namespace EDEN {
                 dialog.Title = "Load Simulation State";
 
                 if (dialog.ShowDialog() == DialogResult.OK) {
-                    app.SwitchState(ReadBinaryFile(dialog.FileName).ToSimulation(app));
+                    SimulationSave save = ReadBinaryFile(dialog.FileName);
+                    if (save != null) {
+                        app.SwitchState(ReadBinaryFile(dialog.FileName).ToSimulation(app));
+                        return true;
+                    }
                 }
             }
+
+            return false;
         }
 
     }

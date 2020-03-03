@@ -11,13 +11,14 @@ namespace EDEN {
     
     class Button : UI {
 
-        public Color hoverColor = Color.Gray;
+        public Color hoverColor;
         public Color defaultColor;
         public Action action;
 
         public Button(int width, int height, Color col, Vector2 pos, String _text, Action _action) : base(pos) {
             texture = Textures.Rect(Color.White, width, height);
             defaultColor = col;
+            hoverColor = Color.Lerp(col, Color.Black, 0.4f);
             text = _text;
             action = _action;
         }

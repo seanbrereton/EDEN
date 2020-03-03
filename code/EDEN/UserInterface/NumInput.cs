@@ -15,7 +15,7 @@ namespace EDEN {
         string displayName;
 
         public NumInput(string _displayName, float startingValue, float min, float max, Vector2 pos, float increment) : base(pos) {
-            texture = Textures.Rect(Color.White, 1, 1);
+            texture = Textures.Rect(Color.White, 180, 30);
 
             displayName = _displayName;
 

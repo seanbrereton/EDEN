@@ -31,10 +31,12 @@ namespace EDEN {
             }));
 
             position.Y += buttonHeight * 1.4f;
+            Vector2 popupPosition = new Vector2(position.X + buttonWidth, position.Y);
 
             //Load button
             AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Load Simulation", () => {
-                Serialization.LoadState(app);
+                if (!Serialization.LoadState(app))
+                    AddComponent(new PopUp(popupPosition, Color.DarkRed, (int)(buttonWidth * 0.8f), (int)(buttonHeight * 1.6f), "Invalid Save File"));
             }));
 
             position.Y += buttonHeight * 1.4f;

@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="CreatureSave.cs" />
+    <Compile Include="PopUp.cs" />
     <Compile Include="Serialization.cs" />
     <Compile Include="SimulationSave.cs" />
     <Compile Include="UserInterface\UI.cs" />

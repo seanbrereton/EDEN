@@ -17,7 +17,7 @@ namespace EDEN {
         public Color bgColor;
         public QuadTree quadTree;
         public bool debug;
-        public float runSpeed = 0.2f;
+        public float runSpeed = 1;
 
         public State(Application _app) {
             app = _app;
