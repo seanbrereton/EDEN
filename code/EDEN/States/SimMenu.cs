@@ -19,7 +19,10 @@ namespace EDEN {
         NumInput popNum;
         NumInput foodSpawn;
         NumInput envSize;
+        NumInput waterLevel;
         NumInput maxEnergy;
+        NumInput hiddenLayerCount;
+        NumInput hiddenLayerSize;
 
 
 
@@ -55,7 +58,10 @@ namespace EDEN {
             position.Y += 50;
 
             //Water
+            waterLevel = new NumInput("Water Level", 0.6f, 0.1f, 0.9f, position, 0.05f);
+            AddComponent(waterLevel);
 
+            position.Y += 50;
 
             //Max energy
             maxEnergy = new NumInput("Max Energy", 96, 48, 192, position, 6);
@@ -63,16 +69,27 @@ namespace EDEN {
 
             position.Y += 50;
 
-            //Layer size??
+            //Layer size
+
+            hiddenLayerCount = new NumInput("Hidden Layer Count", 2, 0, 8, position, 1);
+            AddComponent(hiddenLayerCount);
+
             position.Y += 50;
 
+            hiddenLayerSize = new NumInput("Hidden Layer Size", 13, 1, 26, position, 1);
+            AddComponent(hiddenLayerSize);
+
+            position.Y += 50;
 
             AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Start Custom Sim", () => {
                 Settings customSettings = new Settings(
                     popNum.value,
                     foodSpawn.value,
                     envSize.value,
-                    maxEnergy.value
+                    waterLevel.value,
+                    maxEnergy.value,
+                    hiddenLayerCount.value,
+                    hiddenLayerSize.value
                 );
 
                 app.SwitchState(new Simulation(app, customSettings));

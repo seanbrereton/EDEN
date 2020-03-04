@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 
 namespace EDEN {
-    
+
     public class Creature : Entity {
 
         public NeuralNet network;
@@ -24,44 +24,44 @@ namespace EDEN {
         float toEat;
         public float toMate;
 
+        // Attributes
+        public string name;
         public int childrenCount;
         public int generation;
         public float age;
-        public float reproductionTimer;
         public float energy;
-        public float maxEnergy = 96;
         int viewSize = 96;
-        Rectangle[] visionRects = new Rectangle[2];
 
+        Rectangle[] visionRects = new Rectangle[2];
         int radius = 16;
         Texture2D eyeTexture;
 
+        // Timers
         float perceiveTimer;
+        public float reproductionTimer;
 
-        Simulation simulation;
+        Simulation sim;
 
-        public string name;
+        public Creature() { }
 
-        int[] layers = new int[] { 13, 12, 12, 4 };
-
-        public Creature() {}
-
-        public Creature(Vector2 _position, string _name) : base(_position) {
+        public Creature(Vector2 _position, string _name, Simulation _sim) : base(_position) {
             name = _name;
             generation = 0;
             color = Rand.RandColor();
-            network = new NeuralNet(layers);
-            energy = maxEnergy / 2;
+            sim = _sim;
+            network = new NeuralNet(13, sim.settings.hiddenLayerCount, sim.settings.hiddenLayerSize, 4);
+            energy = sim.settings.maxEnergy / 2;
             scale = 0.1f;
             rotation = Rand.Range(360);
         }
 
-        public Creature(Vector2 _position, string _name, Color _color, NeuralNet _network, int _generation) : base(_position) {
+        public Creature(Vector2 _position, string _name, Simulation _sim, Color _color, NeuralNet _network, int _generation) : base(_position) {
             name = _name;
             generation = _generation;
             color = _color;
-            network = _network;
-            energy = maxEnergy / 2;
+            sim = _sim;
+            network = new NeuralNet(13, sim.settings.hiddenLayerCount, sim.settings.hiddenLayerSize, 4);
+            energy = sim.settings.maxEnergy / 2;
             scale = 0.1f;
             rotation = Rand.Range(360);
         }
@@ -74,8 +74,6 @@ namespace EDEN {
 
             for (int i = 0; i < visionRects.Length; i++)
                 visionRects[i] = new Rectangle(Point.Zero, new Point(viewSize));
-
-            simulation = ((Simulation)parent);
         }
 
         public override void Update(float deltaTime) {
@@ -112,8 +110,8 @@ namespace EDEN {
         }
 
         void Die() {
-            parent.AddComponent(new Food(position, color, maxEnergy / 16));
-            simulation.creatures.Remove(this);
+            parent.AddComponent(new Food(position, color, sim.settings.maxEnergy / 16));
+            sim.creatures.Remove(this);
             Remove();
         }
 
@@ -135,7 +133,7 @@ namespace EDEN {
 
         float[] GetInputs() {
             return new float[] {
-                energy / maxEnergy,
+                energy / sim.settings.maxEnergy,
                 foodSeen[0],
                 foodSeen[1],
                 foodSeen[2],
@@ -194,7 +192,7 @@ namespace EDEN {
             if (totalFoodSeen > 0)
                 for (int i = 0; i < foodSeen.Length; i++)
                     foodSeen[i] = foodSeen[i] / totalFoodSeen;
-            
+
             float totalCreaturesSeen = creaturesSeen[0] + creaturesSeen[1] - creaturesSeen[2];
             if (totalCreaturesSeen > 0)
                 for (int i = 0; i < creaturesSeen.Length; i++)
@@ -207,22 +205,22 @@ namespace EDEN {
         }
 
         public void Target() {
-            simulation.targeted = this;
+            sim.targeted = this;
         }
 
         public override void Collides(Entity entity) {
             if (entity is Food) {
                 touchingFood = 1;
-                if (toEat > 0 && energy < maxEnergy) {
+                if (toEat > 0 && energy < sim.settings.maxEnergy) {
                     energy += ((Food)entity).energy;
-                    simulation.foods.Remove(entity);
+                    sim.foods.Remove(entity);
                     entity.Remove();
                 }
             } else if (entity is Creature) {
                 touchingCreature = 1;
                 Creature creature = (Creature)entity;
                 if (toMate > 0 && scale >= 0.5f && reproductionTimer < 0 && creature.toMate > -0.5 && creature.scale >= 0.5f
-                    && energy > 9 * maxEnergy / 32 && creature.energy > 9 * maxEnergy / 32)
+                    && energy > 9 * sim.settings.maxEnergy / 32 && creature.energy > 9 * sim.settings.maxEnergy / 32)
                     Reproduce(creature);
             }
         }
@@ -234,8 +232,8 @@ namespace EDEN {
             reproductionTimer = 8;
             other.reproductionTimer = 8;
 
-            energy -= maxEnergy / 4;
-            other.energy -= maxEnergy / 4;
+            energy -= sim.settings.maxEnergy / 4;
+            other.energy -= sim.settings.maxEnergy / 4;
 
             NeuralNet newNetwork = new NeuralNet(network, other.network, mutationRate);
             Color newColor = Color.Lerp(color, other.color, 0.5f);
@@ -247,8 +245,8 @@ namespace EDEN {
             string secondHalf = other.name.Substring(secondStart, other.name.Length - secondStart);
             string newName = firstHalf + secondHalf;
 
-            Creature newCreature = new Creature(position, newName, newColor, newNetwork, newGeneration);
-            simulation.creatures.Add(newCreature);
+            Creature newCreature = new Creature(position, newName, sim, newColor, newNetwork, newGeneration);
+            sim.creatures.Add(newCreature);
             parent.AddComponent(newCreature);
         }
 

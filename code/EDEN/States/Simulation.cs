@@ -30,7 +30,7 @@ namespace EDEN {
                 branchTextures[i] = Textures.Rect(Color.Transparent, settings.envSize, settings.envSize, 2 * (int)(Math.Pow(2, i)), Color.Goldenrod);
             
             quadTree = new QuadTree(new Rectangle(Point.Zero, new Point(settings.envSize)), 0, branchTextures);
-            environment = new Environment(new Vector2(settings.envSize) / 2, new Point(settings.envSize), 16, 0.62f, 9);
+            environment = new Environment(new Vector2(settings.envSize) / 2, new Point(settings.envSize), 16, 0.5f + settings.waterLevel, 9);
         }
 
         public override void Start() {
@@ -87,7 +87,7 @@ namespace EDEN {
         }
 
         public Creature SpawnNewCreature(Vector2 position) {
-            Creature newCreature = new Creature(position, Rand.Choice(nouns));
+            Creature newCreature = new Creature(position, Rand.Choice(nouns), this);
             creatures.Add(newCreature);
             AddComponent(newCreature);
             return newCreature;
@@ -122,6 +122,10 @@ namespace EDEN {
 
             if (Input.Press(Keys.OemQuestion))
                 Serialization.SaveState(this);
+
+            if (Input.Press(Keys.Escape)) {
+                app.SwitchState(new MainMenu(app));
+            }
         }
     }
 }

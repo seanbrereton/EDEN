@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 
 namespace EDEN {
     [Serializable]
@@ -12,22 +7,31 @@ namespace EDEN {
         public int population;
         public float foodDensity;
         public int envSize;
+        public float waterLevel;
         public int maxEnergy;
+        public int hiddenLayerCount;
+        public int hiddenLayerSize;
 
         public Settings() {
             //Default settings
             population = 256;
             foodDensity = 0.8f;
             envSize = 1600;
+            waterLevel = 0.12f;
             maxEnergy = 96;
+            hiddenLayerCount = 2;
+            hiddenLayerSize = 13;
         }
 
-        public Settings(float _pop, float _foodDensity, float _envSize, float _maxEnergy) {
+        public Settings(float _pop, float _foodDensity, float _envSize, float _waterLevel, float _maxEnergy, float _hiddenLayerCount, float _hiddenLayerSize) {
             //Custom settings constructor
             population = (int)_pop;
             foodDensity = _foodDensity;
             envSize = (int)_envSize;
+            waterLevel = _waterLevel / 5f;
             maxEnergy = (int)_maxEnergy;
+            hiddenLayerCount = (int)_hiddenLayerCount;
+            hiddenLayerSize = (int)_hiddenLayerSize;
         }
     }
 }

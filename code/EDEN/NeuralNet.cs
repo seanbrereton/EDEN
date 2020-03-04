@@ -10,15 +10,18 @@ namespace EDEN {
         float[][] biases;
         float[][][] weights;
 
-        public NeuralNet(int[] _layers) {
+        public NeuralNet(int inputLayerSize, int hiddenLayerCount, int hiddenLayerSize, int outputLayerSize) {
             // Initializes the neurons, biases, and weights to random values
-            layers = new int[_layers.Length];
+            layers = new int[hiddenLayerCount + 2];
+            layers[0] = inputLayerSize;
+            layers[hiddenLayerCount + 1] = outputLayerSize;
             List<float[]> neuronList = new List<float[]>();
             List<float[]> biasList = new List<float[]>();
             List<float[][]> weightList = new List<float[][]>();
 
             for (int i = 0; i < layers.Length; i++) {
-                layers[i] = _layers[i];
+                if (i != 0 && i != layers.Length - 1)
+                    layers[i] = hiddenLayerSize;
                 neuronList.Add(new float[layers[i]]);
                 float[] bias = new float[layers[i]];
                 List<float[]> layerWeightList = new List<float[]>();
