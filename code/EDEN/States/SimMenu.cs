@@ -30,7 +30,14 @@ namespace EDEN {
             //set background
             bgColor = Color.DarkOliveGreen;
 
-            Vector2 position = new Vector2(app.screenSize.X / 2, (app.screenSize.Y / 2) - buttonHeight * 2.4f);
+            Vector2 position = new Vector2(app.screenSize.X / 2, (app.screenSize.Y / 2) - buttonHeight * 7.2f);
+            
+            //Back button
+            AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Back to Main Menu", () => {
+                app.SwitchState(new MainMenu(app));
+            }));
+
+            position.Y += 100;
 
             //Default simulation
             AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Default Simulation", () => {
