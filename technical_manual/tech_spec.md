@@ -4,7 +4,33 @@
 - **Sean Brereton**
 
 # 0. TOC
-{:toc}
+
+1. Introduction
+
+- 1.1 Overview
+- 1.2 Glossary
+
+2. System Architecture
+
+3. High-Level Design
+
+- 3.1 Class Diagram
+- 3.2 Data Flow Diagram
+- 3.3 Feed-Forward Neural Network Diagram
+
+4. Development and Testing
+
+- 4.1 Development
+- 4.2 Neural Network Unit tests
+- 4.3 Other Unit tests
+- 4.4 Functionality Tests
+
+5. Problems and Resolution
+
+6. Installation Guide
+
+- 6.1 Software and Hardware Requirements
+- 6.2 Installation Steps
 
 ## 1. Introduction
 
@@ -37,6 +63,10 @@ The creatures in the simulations use a basic Feed Forward Neural Network. This t
 #### *QuadTree*
 
 - A quadtree is a tree data structure in which each internal node has exactly four children. Quadtrees are the two-dimensional analog of octrees and are most often used to partition a two-dimensional space by recursively subdividing it into four quadrants or regions.
+
+#### *GUI*
+
+- The graphical user interface (GUI) is a form of user interface that allows users to interact with a system through graphical icons.
 
 ## 2. System Architecture
 
@@ -83,6 +113,10 @@ This method allows us to easily check if a key was pressed. `IsKeyDown()` is a b
 
 Monogame also made graphics a lot easier. The built in `Draw()` function makes it easy to draw textures to the screen. This was useful for displaying creatures and the environment.
 
+Overall the development of the project was quite smooth, aside from a few minor problems along the way. We implemented all the major features that we had planned to do in the functional specification. The main thing we changed was deciding against implementing fighting between creatures as we didn't feel like it would have much benefit.
+
+If we had more time to develop the project we would have made more improvements to the User Interface. We also would have tested different configurations for simulations and make other small environment changes to see the effects they would have. If we had of gotten ethical approval sooner we would have also liked to have external users test the system to get feedback about the UI and the simulation itself.
+
 ### 4.2 Neural Network Unit tests
 
 For the neural network we made unit tests to determine whether or not the outputs were normalised between the correct range of -1 and 1. This is very important for the functionality of the neural network.
@@ -110,11 +144,23 @@ public void FeedForwardTest1() {
 }
 ```
 
-### 4.2 Other Unit Tests
+### 4.3 Other Unit Tests
 
-- Other unit tests did..........
+Other unit tests were performed throughout the system. Unit tests were performed for the Rand class. This made sure that methods in the class were returning random values of the correct type and in the correct range that was provided.
 
-### 4.3 Functionality tests
+Below is a sample test from the Range test class.
+
+```C#
+[TestMethod()]
+public void FloatRangeTest1() {
+    float min = -2.3f;
+    float max = 3.1f;
+    float value = Rand.Range(min, max);
+    Assert.IsTrue(InRange(min, max, value));
+}
+```
+
+### 4.4 Functionality tests
 
 To test the functionality of our system we walked through the application to check the functionality it. We checked functionalities such as loading simulations by trying to load invalid files. Initially it crashed the program. We added error handling which now gives an error message on the menu if an invalid file is chosen. We also tested it with valid `.bin` simulation save files
 
@@ -122,7 +168,7 @@ To test the functionality of our system we walked through the application to che
 
 We tested other aspects of the menu such as custom simulation configurations. We tried starting simulations with different configuration variations.  Since users are limited to the input values they can use there were no errors when trying this.
 
-We
+Tests were also done to check the functionality of the actual simulation. We tested things like camera functionality, saving and exiting of the simulation, whether or not creature and environment attributes were being displayed correctly on the sidebar.
 
 ## 5. Problems and Resolution
 
@@ -138,9 +184,15 @@ We
 
 - Windows OS
 
+If building from source:
+
+- Visual Studio 2019
+- Monogame version 3.7.1
+- C# version 7.3
+
 ### 6.2 Installation Steps
 
-There are 2 different ways of installing the system. We recommend using the first option as it much faster and easier to use the download.
+There are 2 different ways of installing the system. We recommend using the first option as it much faster and easier to use the download link.
 
 #### From Download
 
