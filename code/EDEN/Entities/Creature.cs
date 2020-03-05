@@ -231,19 +231,18 @@ namespace EDEN {
         }
 
         public override void Collides(Entity entity) {
-            if (entity is Food) {
+            if (entity is Food food) {
                 // If the entity is touching food, use outputs and energy to decide if it eats
                 touchingFood = 1;
                 if (toEat > 0 && energy < sim.settings.maxEnergy) {
                     // Add energy to the creature and remove the food
-                    energy += ((Food)entity).energy;
+                    energy += food.energy;
                     sim.foods.Remove(entity);
-                    entity.Remove();
+                    food.Remove();
                 }
-            } else if (entity is Creature) {
+            } else if (entity is Creature creature) {
                 // If the entity is touching a creature, use outputs and energy to decide if it reproduces
                 touchingCreature = 1;
-                Creature creature = (Creature)entity;
                 // Only reproduces if both creatures' toMate outputs are of a suitable level,
                 // and this creature's reproduction timer is ready, and both have enough energy
                 if (toMate > 0 && scale >= 0.5f && reproductionTimer < 0 && creature.toMate > -0.5 && creature.scale >= 0.5f

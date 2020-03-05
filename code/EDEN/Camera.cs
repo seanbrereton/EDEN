@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace EDEN {
-    
+
     public class Camera : Component {
 
         public Vector2 screenSize;

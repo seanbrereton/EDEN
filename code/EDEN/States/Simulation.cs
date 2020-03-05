@@ -13,7 +13,7 @@ namespace EDEN {
         public Settings settings;
         public Environment environment;
 
-        PopulationDisplay populationDisplay;
+        SimulationSidebar populationDisplay;
 
         public Creature targeted;
         public List<Creature> creatures = new List<Creature>();
@@ -41,8 +41,16 @@ namespace EDEN {
             camera.locked = false;
 
             // Initializes side panel display and adds it to components
-            populationDisplay = new PopulationDisplay(new Vector2(120, app.screenSize.Y / 40), 240, (int)(app.screenSize.Y / 20), 20);
+            populationDisplay = new SimulationSidebar(new Vector2(120, app.screenSize.Y / 40), 240, (int)app.screenSize.Y, 20);
             AddComponent(populationDisplay);
+
+            AddComponent(new Button(60, 30, Color.PaleVioletRed, new Vector2(app.screenSize.X - 30, 15), "Exit", () => {
+                app.SwitchState(new MainMenu(app));
+            }));
+            AddComponent(new Button(60, 30, Color.White, new Vector2(app.screenSize.X - 30, 45), "Save", () => {
+                Serialization.SaveState(this);
+            }));
+
 
             AddComponent(environment);
 
@@ -63,7 +71,7 @@ namespace EDEN {
             float highestGeneration = 0;
             Creature highestGenerationCreature = null;
 
-            populationDisplay.UpdateCreatures(creatures);
+            populationDisplay.UpdateDetails(this);
             // Update most successful creatures
             foreach (Creature creature in creatures) {
                 if (creature.age > highestAge) {
@@ -96,14 +104,13 @@ namespace EDEN {
                 SpawnNewFood();
         }
 
-        public Creature SpawnNewCreature(Vector2 position) {
+        public void SpawnNewCreature(Vector2 position) {
             Creature newCreature = new Creature(position, Rand.Choice(nouns), this);
             creatures.Add(newCreature);
             AddComponent(newCreature);
-            return newCreature;
         }
-        public Creature SpawnNewCreature() {
-            return SpawnNewCreature(Rand.Range(new Vector2(settings.envSize)));
+        public void SpawnNewCreature() {
+            SpawnNewCreature(Rand.Range(new Vector2(settings.envSize)));
         }
 
         public void SpawnNewFood(Vector2 position) {
@@ -136,14 +143,6 @@ namespace EDEN {
                 runSpeed += 0.5f;
             if (Input.Press(Keys.OemOpenBrackets))
                 runSpeed -= 0.5f;
-
-            // Save simulation
-            if (Input.Press(Keys.OemQuestion))
-                Serialization.SaveState(this);
-
-            // Exits simulation
-            if (Input.Press(Keys.Escape))
-                app.SwitchState(new MainMenu(app));
         }
     }
 }

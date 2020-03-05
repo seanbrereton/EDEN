@@ -75,13 +75,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
+    <Compile Include="TextBox.cs" />
+    <Compile Include="UserInterface\CreatureDisplay.cs" />
     <Compile Include="CreatureSave.cs" />
     <Compile Include="UserInterface\PopUp.cs" />
     <Compile Include="Util\Serialization.cs" />
     <Compile Include="SimulationSave.cs" />
     <Compile Include="UserInterface\UI.cs" />
-    <Compile Include="UserInterface\PopulationDisplay.cs" />
-    <Compile Include="UserInterface\CreatureDisplay.cs" />
+    <Compile Include="UserInterface\SimulationSidebar.cs" />
     <Compile Include="UserInterface\Button.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Environment.cs" />
@@ -162,6 +163,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="app.manifest" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="EDEN_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

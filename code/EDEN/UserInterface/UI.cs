@@ -1,10 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EDEN {
     
@@ -16,13 +11,15 @@ namespace EDEN {
         public UI(Vector2 _position) : base(_position) {}
 
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
-            base.SuperDraw(spriteBatch, UIspriteBatch);
+            if (active) { 
+                base.SuperDraw(spriteBatch, UIspriteBatch);
 
-            if (text != null) {
-                // Centres text in buttons and draws
-                float x = (rect.X + (rect.Width / 2)) - (Application.font.MeasureString(text).X / 2);
-                float y = (rect.Y + (rect.Height / 2)) - (Application.font.MeasureString(text).Y / 2);
-                UIspriteBatch.DrawString(Application.font, text, new Vector2(x, y), fontColor);
+                if (text != null) {
+                    // Centers text in buttons and draws
+                    float x = (rect.X + (rect.Width / 2)) - (Application.font.MeasureString(text).X / 2);
+                    float y = (rect.Y + (rect.Height / 2)) - (Application.font.MeasureString(text).Y / 2);
+                    UIspriteBatch.DrawString(Application.font, text, new Vector2(x, y), fontColor);
+                }
             }
         }
 

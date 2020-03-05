@@ -94,9 +94,7 @@ namespace EDEN {
             weights = weightList.ToArray();
         }
 
-        float Activate(float value) {
-            return (float)Math.Tanh(value);
-        }
+        float Activate(float value) => (float)Math.Tanh(value);
 
         public float[] FeedForward(float[] inputs) {
             // Feeds the inputs in through the layers of the network, returns the output layer
