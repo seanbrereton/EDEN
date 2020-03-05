@@ -223,7 +223,11 @@ namespace EDEN {
         public override void HandleInput() {
             // Target this creature in the simulation if clicked
             if (Input.Click() && rect.Contains(Input.MouseWorldPos))
-                sim.targeted = this;
+                Target();
+        }
+
+        public void Target() {
+            sim.targeted = this;
         }
 
         public override void Collides(Entity entity) {
