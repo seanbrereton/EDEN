@@ -9,6 +9,8 @@ namespace EDEN {
     [Serializable]
     public class CreatureSave {
 
+        // A class of serializable data representing a creature, that can be saved to a file
+
         string name;
         NeuralNet network;
         float x;
@@ -38,6 +40,8 @@ namespace EDEN {
         }
 
         public Creature ToCreature(Simulation simulation) {
+            // Constructs new creature using saved attributes
+
             Creature creature = new Creature() {
                 name = name,
                 network = network,

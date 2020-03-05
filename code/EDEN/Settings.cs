@@ -4,6 +4,8 @@ namespace EDEN {
     [Serializable]
     public class Settings {
 
+        // Holds the settings used by simulations and creatures
+
         public int population;
         public float foodDensity;
         public int envSize;

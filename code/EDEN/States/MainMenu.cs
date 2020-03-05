@@ -23,13 +23,15 @@ namespace EDEN {
             //set background
             bgColor = Color.DarkOliveGreen;
 
+            //initial position for button
             Vector2 position = new Vector2(app.screenSize.X / 2, (app.screenSize.Y / 2) - buttonHeight * 2.4f);
 
-            //Start button
+            //Start new simulation button
             AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "New Simulation", () => {
                 app.SwitchState(new SimMenu(app)); 
             }));
 
+            //changing position for next button
             position.Y += buttonHeight * 1.4f;
             Vector2 popupPosition = new Vector2(position.X + buttonWidth, position.Y);
 

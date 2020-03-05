@@ -12,6 +12,7 @@ namespace EDEN {
 
         public NeuralNet(int inputLayerSize, int hiddenLayerCount, int hiddenLayerSize, int outputLayerSize) {
             // Initializes the neurons, biases, and weights to random values
+
             layers = new int[hiddenLayerCount + 2];
             layers[0] = inputLayerSize;
             layers[hiddenLayerCount + 1] = outputLayerSize;
@@ -49,6 +50,8 @@ namespace EDEN {
         }
 
         public NeuralNet (NeuralNet net1, NeuralNet net2, float mutationRate) {
+            // Creates a network from crossing over two parent networks, with a chance of mutation
+
             NeuralNet[] parents = { net1, net2 };
             layers = new int[net1.layers.Length];
             List<float[]> neuronList = new List<float[]>();
@@ -62,14 +65,18 @@ namespace EDEN {
                 List<float[]> layerWeightList = new List<float[]>();
 
                 for (int j = 0; j < layers[i]; j++) {
+                    // Choose a random parent's bias
                     bias[j] = Rand.Choice(parents).biases[i][j];
+                    // A small chance of slightly mutating the bias
                     if (Rand.Range(1f) < mutationRate)
                         bias[j] = Math.Max(-0.5f, Math.Min(0.5f, bias[j] + Rand.Range(-0.1f, 0.1f)));
 
                     if (i > 0) {
                         float[] neuronWeights = new float[layers[i - 1]];
                         for (int k = 0; k < layers[i - 1]; k++) {
+                            // Choose a random parent's weight
                             neuronWeights[k] = Rand.Choice(parents).weights[i-1][j][k];
+                            // A small chance of slightly mutating the weight
                             if (Rand.Range(1f) < mutationRate)
                                 neuronWeights[k] = Math.Max(-0.5f, Math.Min(0.5f, neuronWeights[k] + Rand.Range(-0.1f, 0.1f)));
                         }
@@ -89,11 +96,11 @@ namespace EDEN {
 
         float Activate(float value) {
             return (float)Math.Tanh(value);
-            /*float k = (float)Math.Exp(value);
-            return -1 + (2 * k) / (1f + k);*/
         }
 
         public float[] FeedForward(float[] inputs) {
+            // Feeds the inputs in through the layers of the network, returns the output layer
+
             for (int i = 0; i < inputs.Length; i++)
                 neurons[0][i] = inputs[i];
 

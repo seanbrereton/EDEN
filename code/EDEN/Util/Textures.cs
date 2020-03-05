@@ -1,18 +1,22 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+
 namespace EDEN {
     public static class Textures {
         static GraphicsDevice graphics;
         
-        public static void Init(Game app) {
+        public static void Init(Application app) {
+            // Gets the graphics device from the application,
+            // needed to creature textures that can be drawn on screen
             graphics = app.GraphicsDevice;
         }
 
+        // Returns an tempty texture with width and height
         public static Texture2D Empty(int width, int height) {
             return new Texture2D(graphics, width, height);
         }
 
-        // Draws circular texture
+        // Draws circular texture, with a given outline colour
         public static Texture2D Circle(Color color, int radius, int outlineWidth, Color outlineColor) {
             int diameter = radius * 2;
             Texture2D texture = new Texture2D(graphics, diameter, diameter);
@@ -34,11 +38,14 @@ namespace EDEN {
             texture.SetData<Color>(colors);
             return texture;
         }
+
+        // Draws circle texture with default outline, which is the main colour but darkened
         public static Texture2D Circle(Color color, int radius, int outlineWidth = 0) {
             Color outlineColor = outlineWidth > 0 ? Color.Lerp(color, Color.Black, 0.2f) : Color.Black;
             return Circle(color, radius, outlineWidth, outlineColor);
         }
 
+        // Draws rectangle texture, with a given outline colour
         public static Texture2D Rect(Color color, int width, int height, int outlineWidth, Color outlineColor) {
             Texture2D texture = new Texture2D(graphics, width, height);
             Color[] colors = new Color[width * height];
@@ -56,34 +63,12 @@ namespace EDEN {
             texture.SetData<Color>(colors);
             return texture;
         }
+
+
+        // Draws rectangle texture with default outline, which is the main colour but darkened
         public static Texture2D Rect(Color color, int width, int height, int outlineWidth = 0) {
             Color outlineColor = outlineWidth > 0 ? Color.Lerp(color, Color.Black, 0.2f) : Color.Black;
             return Rect(color, width, height, outlineWidth, outlineColor);
-        }
-
-        public static Texture2D Merge(Texture2D layer1, Texture2D layer2, Point position) {
-            int height = layer1.Height;
-            int width = layer1.Width;
-            Rectangle addedRect = new Rectangle(position, new Point(layer2.Width, layer2.Height));
-            Texture2D texture = new Texture2D(graphics, height, width);
-            Color[] colors = new Color[height * width];
-            Color[] layer1Colors = new Color[height * width];
-            layer1.GetData(layer1Colors);
-            Color[] layer2Colors = new Color[addedRect.Width * addedRect.Height];
-            layer2.GetData(layer2Colors);
-
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    int i = x * width + y;
-                    if (addedRect.Contains(x, y))
-                        colors[i] = layer2Colors[(x + addedRect.X) * addedRect.Width + (y + addedRect.Y)];
-                    else
-                        colors[i] = layer1Colors[i];
-                }
-            }
-
-            texture.SetData(colors);
-            return texture;
         }
     }
 }

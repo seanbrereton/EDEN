@@ -19,6 +19,7 @@ namespace EDEN {
             base.SuperDraw(spriteBatch, UIspriteBatch);
 
             if (text != null) {
+                // Centres text in buttons and draws
                 float x = (rect.X + (rect.Width / 2)) - (Application.font.MeasureString(text).X / 2);
                 float y = (rect.Y + (rect.Height / 2)) - (Application.font.MeasureString(text).Y / 2);
                 UIspriteBatch.DrawString(Application.font, text, new Vector2(x, y), fontColor);

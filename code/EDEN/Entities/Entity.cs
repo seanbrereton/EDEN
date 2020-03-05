@@ -24,17 +24,6 @@ namespace EDEN {
             position = _position;
         }
 
-        public void WrapInBounds(Point bounds) {
-            if (position.X > bounds.X)
-                position.X = 0;
-            if (position.X < 0)
-                position.X = bounds.X;
-            if (position.Y > bounds.Y)
-                position.Y = 0;
-            if (position.Y < 0)
-                position.Y = bounds.Y;
-        }
-
         // A position directly in front of the entity, based on current rotation and position
         public Vector2 Forward {
             get {
@@ -62,6 +51,7 @@ namespace EDEN {
         }
 
         public void Highlight(Color color) {
+            // Draws a circle around this entity, for this frame
             if (highlightTexture is null)
                 highlightTexture = Textures.Circle(
                     Color.Transparent,
@@ -72,8 +62,13 @@ namespace EDEN {
         }
 
         public override void SuperDraw(SpriteBatch spriteBatch, SpriteBatch UIspriteBatch) {
+            // Updates this entity's rect, so that it is only done once per frame
             rect = GetRect();
+
+            // Draws to the appropriate spritebatch
             (this is UI ? UIspriteBatch : spriteBatch).Draw(texture, rect, color);
+
+            // Draws the highlight circle if highlighted
             if (highlightTexture != null && highlightColor != Color.Transparent) {
                 Rectangle highlightRect = new Rectangle(rect.Location, rect.Size);
                 highlightRect.Inflate(rect.Width / 2, rect.Height / 2);

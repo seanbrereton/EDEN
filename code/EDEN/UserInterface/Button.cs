@@ -15,30 +15,28 @@ namespace EDEN {
         public Color defaultColor;
         public Action action;
 
+        // Button constructor
         public Button(int width, int height, Color col, Vector2 pos, String _text, Action _action) : base(pos) {
             texture = Textures.Rect(Color.White, width, height);
             defaultColor = col;
+            // Hover colour is the default colour darkened
             hoverColor = Color.Lerp(col, Color.Black, 0.4f);
             text = _text;
             action = _action;
         }
-
-        public bool IsPressed() {
-            return Input.Click() && rect.Contains(Input.MousePos);   
-        }
-
-        public bool IsHover() {
-            return rect.Contains(Input.MousePos);   
-        }
         
         public override void HandleInput() {
-            if (IsHover()) {
-                color = hoverColor;
-            } else {
-                color = defaultColor;
-            }
+            // Check if the mouse position is within the bounds of the button
+            bool hovered = rect.Contains(Input.MousePos);
 
-            if (IsPressed())
+            // Changes button colour based on if it is hovered over
+            if (hovered)
+                color = hoverColor;
+            else
+                color = defaultColor;
+
+            // If a button is pressed, its action is performed
+            if (Input.Click() && hovered)
                 action();
         }
 

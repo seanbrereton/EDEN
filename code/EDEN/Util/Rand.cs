@@ -31,6 +31,7 @@ namespace EDEN {
         }
         public static Vector2 Range(Vector2 max) { return Range(Vector2.Zero, max); }
 
+        // Return a random item from the given array
         public static T Choice<T>(T[] array) {
             return array[Rand.Range(array.Length)];
         }

@@ -26,6 +26,7 @@ namespace EDEN {
         public Simulation(Application _app, Settings _settings) : base(_app) {
             settings = _settings;
 
+            // Set up quad tree textures for displaying it
             for (int i = 0; i < branchTextures.Length; i++)
                 branchTextures[i] = Textures.Rect(Color.Transparent, settings.envSize, settings.envSize, 2 * (int)(Math.Pow(2, i)), Color.Goldenrod);
             
@@ -35,16 +36,22 @@ namespace EDEN {
 
         public override void Start() {
             bgColor = Color.DodgerBlue;
+
+            // Unlocks the camera so that it can be moved and zoomed
             camera.locked = false;
 
-            populationDisplay = new PopulationDisplay(new Vector2(120, 22.5f), 240, 45);
+            // Initializes side panel display and adds it to components
+            populationDisplay = new PopulationDisplay(new Vector2(120, app.screenSize.Y / 40), 240, (int)(app.screenSize.Y / 20), 20);
             AddComponent(populationDisplay);
 
             AddComponent(environment);
 
+            // Adds creatures to components list. This is used when a saved simulation is loaded in,
+            // the creatures list is updated from the file.
             foreach (Creature creature in creatures)
                 AddComponent(creature);
 
+            // Reads the nouns in from a text file in the content directory, for creature names
             nouns = File.ReadAllLines(app.Content.RootDirectory + "/nounlist.txt");
         }
 
@@ -57,7 +64,7 @@ namespace EDEN {
             Creature highestGenerationCreature = null;
 
             populationDisplay.UpdateCreatures(creatures);
-
+            // Update most successful creatures
             foreach (Creature creature in creatures) {
                 if (creature.age > highestAge) {
                     highestAge = creature.age;
@@ -72,14 +79,17 @@ namespace EDEN {
                     highestGenerationCreature = creature;
                 }
             }
-
+            
+            // Highlights most successful creatures
             highestAgeCreature?.Highlight(Color.Red);
             highestChildrenCreature?.Highlight(Color.Blue);
             highestGenerationCreature?.Highlight(Color.Yellow);
 
+            // If a creature is targeted, follow it with the camera
             if (targeted != null)
                 camera.position = targeted.position;
 
+            // Spawns new food and creatures if they fall below min count
             while (creatures.Count < settings.population)
                 SpawnNewCreature();
             while (foods.Count < (int)(settings.population * settings.foodDensity))
@@ -97,8 +107,9 @@ namespace EDEN {
         }
 
         public void SpawnNewFood(Vector2 position) {
+            // Spawns food at position a creature died at
             if (environment.CheckTile(position)) {
-                Food newFood = new Food(position, 8);
+                Food newFood = new Food(position, Color.Beige, 8);
                 foods.Add(newFood);
                 AddComponent(newFood);
             }
@@ -108,24 +119,31 @@ namespace EDEN {
         }
 
         public override void HandleInput() {
+            if (Input.Click())
+                SpawnNewFood(Input.MouseWorldPos.ToVector2());
+
+            // Stops focusing on a creature if any camera movement buttons are pressed
             if (Input.Press(Keys.W) || Input.Press(Keys.A) || Input.Press(Keys.S) || Input.Press(Keys.D)
                 || Input.Press(Keys.Up) || Input.Press(Keys.Left) || Input.Press(Keys.Down) || Input.Press(Keys.Right))
                 targeted = null;
 
+            // Displays quad tree if Q is pressed
             if (Input.Press(Keys.Q))
                 debug = !debug;
 
+            // Left square bracket speeds up sim and left slows down
             if (Input.Press(Keys.OemCloseBrackets))
                 runSpeed += 0.5f;
             if (Input.Press(Keys.OemOpenBrackets))
                 runSpeed -= 0.5f;
 
+            // Save simulation
             if (Input.Press(Keys.OemQuestion))
                 Serialization.SaveState(this);
 
-            if (Input.Press(Keys.Escape)) {
+            // Exits simulation
+            if (Input.Press(Keys.Escape))
                 app.SwitchState(new MainMenu(app));
-            }
         }
     }
 }

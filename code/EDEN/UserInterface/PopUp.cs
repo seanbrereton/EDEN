@@ -14,6 +14,7 @@ namespace EDEN {
         }
 
         public override void Update(float deltaTime) {
+            // Removes component after it has been on screen long enough for its lifeTime timer to reach 0
             lifeTime -= deltaTime;
             if (lifeTime <= 0)
                 Remove();

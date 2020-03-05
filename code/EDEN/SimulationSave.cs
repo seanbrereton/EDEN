@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EDEN {
     [Serializable]
     public class SimulationSave {
+
+        // A class of serializable data representing a simulation, that can be saved to a file
 
         public List<CreatureSave> creatureSaves = new List<CreatureSave>();
         bool[,] environmentTiles;
@@ -21,12 +20,15 @@ namespace EDEN {
         }
 
         public Simulation ToSimulation(Application app) {
+            // Constructs new simulation using saved settings
             Simulation simulation = new Simulation(app, settings);
 
-            foreach (CreatureSave creatureSave in creatureSaves) {
+            // Adds saved creatures to simulation's creature list
+            // Does not add to simulation's component list, as they are not ready to be Started
+            foreach (CreatureSave creatureSave in creatureSaves)
                 simulation.creatures.Add(creatureSave.ToCreature(simulation));
-            }
 
+            // Generate simulation's environment texture using saved tiles
             simulation.environment.tiles = environmentTiles;
             simulation.environment.GenerateTexture();
 

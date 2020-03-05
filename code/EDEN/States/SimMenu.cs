@@ -24,6 +24,7 @@ namespace EDEN {
             
             //Back button
             AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Back to Main Menu", () => {
+                //if button is pressed user is returned to main menu
                 app.SwitchState(new MainMenu(app));
             }));
 
@@ -78,6 +79,8 @@ namespace EDEN {
 
             position.Y += 50;
 
+            // When clicked, this button switches state to a new simulation, 
+            // created with settings created from the values chosen in this menu
             AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Start Custom Sim", () => {
                 Settings customSettings = new Settings(
                     popNum.value,
