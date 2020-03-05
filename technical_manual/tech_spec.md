@@ -1,12 +1,20 @@
-# 0. Table of Contents
+# EDEN Technical Manual
 
+- **Sean Dyer**
+- **Sean Brereton**
+
+# 0. TOC
 {:toc}
 
 ## 1. Introduction
 
 ### 1.1 Overview
 
-The system that we developed is an application that allows users to run simulation to show the evolution of artificial creatures that make decisions through a neural network. It ......
+EDEN is a program that simulates evolution of simple creatures that are controlled using neural networks. EDEN is built uisng C# and Monogame. Creatures live in an environment that comprises of land and water and food that spawns on land. Their objectives are to survive for as long as possible by finding and eating food and to reproduce by finding a suitable mate. Water is a challenge for them as it drains their energy much quicker than staying on land.
+
+The system consists of a main menu, a simulation setting menu and the actual simulation itself. The main menu allows a user to start a new simulation, load a previous simulation or quit the application. A simulation menu appears if a user clicks on new simulation. This lets a user either start a new simulation with the default settings which we chose or they can start a new simulation with their own custom settings such as population size and water ratio. Once a simulation has been started the environment and creatures are spawned in. There is a simple GUI that shows the user statistics about the creatures including age, how many children they have and what generation the creature is.
+
+The creatures in the simulations use a basic Feed Forward Neural Network. This takes in inputs such as nearest food, nearest creature and its own energy. These inputs go through a number of hidden layers and produce 4 outputs. Hidden layer size can be set by the user in the custom simulation option. The 4 outputs are speed, direction, whether or not to eat and whether or not to reproduce. If a creature is spawned from the simulation and does not have parents it is given random behaviours. If these creatures are succesful in reproducing their genes will be passed onto further generations.
 
 ### 1.2 Glossary
 
@@ -32,30 +40,118 @@ The system that we developed is an application that allows users to run simulati
 
 ## 2. System Architecture
 
-- system architecture diagram?
+![System Architecture Diagram](images/architecture.png)
+
+ADD Description of diagram
+
+This diagram ended up being the same as in the functional specification
 
 ## 3. High-Level Design
 
-- DFD
-- Object model
+### 3.1 Class Diagram
 
-## 4. Problems and Resolution
+![Class diagram](images/class.png)
 
-- **Problem:** The biggest problem we encountered was the efficiency of the program. **Resolution** We found that our intitial method of collision detection used a lot of computation power when there were a lot of entities in the simulation. Every entity was checked against each other each frame which got very slow with large number of entities. . Quad tree
-- lived too long going in circle. Speed takes more energy
-- not reproducing. made easier to reproduce
-- no challenge. Water
-- very similar results. Custom sims
-- **Problem:** Saying goodbye to fallen nermals. **Resolution:** There is no resolution. It gets harder everyday.
+### 3.2 Data Flow Diagram
 
-## 5. Installation Guide
+![Data-Flow-Diagram](images/dfd.png)
 
-- Download zip and open .exe
+The Data Flow Diagrams is also the same as in the functional specification.
 
-OR
+### 3.3 Feed-Forward Neural Network Diagram
 
-- need c# (c# download steps)
-- windows or linux
-- download program from repo (download link)
-- run in visual studio, monogame or as a standalone program (newest version link)
-- need monogame (mongame download steps)
+![Neural net Diagram](images/nn.PNG)
+
+- In this diagram the inputs nodes on the left go through 2 hidden layers of 5 nodes each.
+- There are 4 outputs on the right.
+- The inputs must be 13 nodes and the outputs must be 4 nodes.
+- The amount of hidden layers and the size of them can be adjusted for more or less complex calculations.
+
+## 4. Development and Testing
+
+### 4.1 Development
+
+The system was developed using C# and Monogame. Monogame proved to be very useful for a number of reasons. The boiler plate code allowed us to easily set up a window and change it's size. Monogame also made it relatively easy to handle keyboard and mouse input.
+
+```C#
+public static bool Press(Keys key, bool held = false) {
+    return keyboard.IsKeyDown(key) && (held || prevKeyboard.IsKeyUp(key));
+}
+```
+
+This method allows us to easily check if a key was pressed. `IsKeyDown()` is a built in monogame method that returns a `bool` to see if a key is being pressed.
+
+Monogame also made graphics a lot easier. The built in `Draw()` function makes it easy to draw textures to the screen. This was useful for displaying creatures and the environment.
+
+### 4.2 Neural Network Unit tests
+
+For the neural network we made unit tests to determine whether or not the outputs were normalised between the correct range of -1 and 1. This is very important for the functionality of the neural network.
+
+Below is an example of a unit test for the neural network.
+
+```C#
+public bool AllWithinRange(float[] outputs) {
+    foreach (float output in outputs)
+        if (output < -1 || output > 1)
+            return false;
+    return true;
+}
+
+public bool FFTestBase(float[] inputs, int hCount, int hSize, int outSize) {
+    NeuralNet network = new NeuralNet(inputs.Length, hCount, hSize, outSize);
+
+    return AllWithinRange(network.FeedForward(inputs));
+}
+
+[TestMethod()]
+public void FeedForwardTest1() {
+    float[] inputs = { 0, 0, 0 };
+    Assert.IsTrue(FFTestBase(inputs, 3, 3, 3));
+}
+```
+
+### 4.2 Other Unit Tests
+
+- Other unit tests did..........
+
+### 4.3 Functionality tests
+
+To test the functionality of our system we walked through the application to check the functionality it. We checked functionalities such as loading simulations by trying to load invalid files. Initially it crashed the program. We added error handling which now gives an error message on the menu if an invalid file is chosen. We also tested it with valid `.bin` simulation save files
+
+![error message for load file](images/save.PNG)
+
+We tested other aspects of the menu such as custom simulation configurations. We tried starting simulations with different configuration variations.  Since users are limited to the input values they can use there were no errors when trying this.
+
+We
+
+## 5. Problems and Resolution
+
+- **Problem:** The biggest problem we encountered was the efficiency of the program.  **Resolution** We found that our intitial method of collision detection used a lot of computation power when there were a lot of entities in the simulation. Initiially, every entity was checked against each other each frame which got very slow with large number of entities. We found that a data structure called a quad tree made these collsion checks much more efficient.
+- **Problem:** Some creatures lived too long by going in circles at maximum speed, collecting food. **Resolution:** We changed the energy and movement system to try and prevent this. Now moving faster uses up more of a creatures energy than if it were to move slower.
+- **Problem:** Not many creatures were willing to reproduce which made simulations end very quickly. **Resolution:** We made easier to for creatures to reproduce by making it cost less energy to do so. This meant more creatures reproduced, therefore passing on the more successful genes.
+- **Problem:** We found that creatures did not have enough of a challenge other than finding food. **Resolution:** To solve this we added water to the environment. If a creature is in water they use up 4 times more energy than they would if they were on land. This led to more thoughtful behaviours in some creatures such as avoiding water or moving slowly through it to use less energy, whereas others died very fast in water.
+- **Problem:** Towards the end of development we found that most simulations gave very similar results. **Resolution:** We ended up implementing more customisable simulations where users can set population size, food spawn rates, environment size, maximum energy, water ratio and hidden layer settings. This resulted in more varied simulation results.
+
+## 6. Installation Guide
+
+### 6.1 Software and Hardware Requirements
+
+- Windows OS
+
+### 6.2 Installation Steps
+
+There are 2 different ways of installing the system. We recommend using the first option as it much faster and easier to use the download.
+
+#### From Download
+
+- Download the zip folder from ......
+- Unzip the folder.
+- Open the folder and click on the file named `EDEN.exe`.
+- This will open the application.
+
+#### From Gitlab
+
+- If Visual Studio 2019 is not already installed it can be downloaded at <https://visualstudio.microsoft.com/downloads/>.
+- Monogame also needs to be installed to run. This can be downloaded at <http://www.monogame.net/downloads/>.
+- When monogame and visual studio are downloaded the repo can be cloned or downloaded from <https://gitlab.computing.dcu.ie/brerets4/2020-ca326-sbrereton-eden> and opened in Visual Studio.
+- Once a solution has been made build and run through Visual Studio by pressing F5
