@@ -56,7 +56,7 @@ If an invalid file is chosen an error message will appear on the screen beside t
 
 When a simulation is started it will run itself without the need of any user interaction. However there is a User Interface that can be used to look at statistics. There are also other keyboard controls that the user can use.
 
-![Simulation screenshot](images/sim.PNG)
+![Simulation screenshot](images/sim.png)
 
 ### 3.1 Understanding the GUI
 
@@ -72,4 +72,4 @@ When a simulation is started it will run itself without the need of any user int
 - The simulation speed can also be sped up or slowed down. Pressing the "[" key slows down the simulation, whereas pressing the "]" key speed up time.
 - When you are finished running the simulation you can exit without saving by closing the program or exit and save by pressing "?" which opens up your File Exporer. Here you can select where you want to save the simulation.
 
-![Screenshot showing quad tree and zoom](images/quadtree.PNG)
+![Screenshot showing quad tree and zoom](images/quadtree.png)
