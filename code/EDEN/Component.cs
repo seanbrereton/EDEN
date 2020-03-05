@@ -7,7 +7,7 @@ namespace EDEN {
     
     public class Component {
 
-        public bool UI;
+        public bool active;
 
         public Component parent;
         public List<Component> components = new List<Component>();
@@ -25,6 +25,7 @@ namespace EDEN {
         }
 
         public void Remove() {
+            active = false;
             parent.toRemove.Add(this);
         }
 
@@ -36,6 +37,7 @@ namespace EDEN {
 
         public virtual void Start() { }
         public virtual void SuperStart() {
+            active = true;
             Start();
 
             foreach (Component component in components)
@@ -55,8 +57,9 @@ namespace EDEN {
             toRemove.Clear();
             toAdd.Clear();
 
-            foreach (Component component in components)
-                component.SuperUpdate(deltaTime);
+            if (active)
+                foreach (Component component in components)
+                    component.SuperUpdate(deltaTime);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch) { }

@@ -24,7 +24,7 @@ namespace EDEN {
             Simulation simulation = new Simulation(app, settings);
 
             foreach (CreatureSave creatureSave in creatureSaves) {
-                simulation.creatures.Add(creatureSave.ToCreature());
+                simulation.creatures.Add(creatureSave.ToCreature(simulation));
             }
 
             simulation.environment.tiles = environmentTiles;

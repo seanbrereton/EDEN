@@ -77,7 +77,7 @@
     <Compile Include="Application.cs" />
     <Compile Include="CreatureSave.cs" />
     <Compile Include="UserInterface\PopUp.cs" />
-    <Compile Include="Utils\Serialization.cs" />
+    <Compile Include="Util\Serialization.cs" />
     <Compile Include="SimulationSave.cs" />
     <Compile Include="UserInterface\UI.cs" />
     <Compile Include="UserInterface\PopulationDisplay.cs" />
@@ -85,7 +85,7 @@
     <Compile Include="UserInterface\Button.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Environment.cs" />
-    <Compile Include="Utils\Input.cs" />
+    <Compile Include="Util\Input.cs" />
     <Compile Include="States\MainMenu.cs" />
     <Compile Include="NeuralNet.cs" />
     <Compile Include="UserInterface\NumInput.cs" />
@@ -95,8 +95,8 @@
     <Compile Include="Settings.cs" />
     <Compile Include="States\SimMenu.cs" />
     <Compile Include="States\State.cs" />
-    <Compile Include="Utils\Textures.cs" />
-    <Compile Include="Utils\Rand.cs" />
+    <Compile Include="Util\Textures.cs" />
+    <Compile Include="Util\Rand.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Entities\Food.cs" />
     <Compile Include="Entities\Creature.cs" />

@@ -37,7 +37,7 @@ namespace EDEN {
             scale = creature.scale;
         }
 
-        public Creature ToCreature() {
+        public Creature ToCreature(Simulation simulation) {
             Creature creature = new Creature() {
                 name = name,
                 network = network,
@@ -49,7 +49,8 @@ namespace EDEN {
                 energy = energy,
                 color = new Color(colorValue),
                 rotation = rotation,
-                scale = scale
+                scale = scale,
+                sim = simulation
             };
 
             return creature;

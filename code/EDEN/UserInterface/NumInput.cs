@@ -24,11 +24,11 @@ namespace EDEN {
             value = startingValue;
 
             AddComponent(new Button(30, 30, Color.White, new Vector2(position.X +160, position.Y), "+", () => {
-                value = Math.Min(maxValue, (float)Math.Round((double)value, 1) + increment);
+                value = Math.Min(maxValue, (float)Math.Round((double)value + increment, 2));
             }));
 
             AddComponent(new Button(30, 30 , Color.White, new Vector2(position.X + 120, position.Y), "-", () => {
-                value = Math.Max(minValue, (float)Math.Round((double)value, 1) - increment);
+                value = Math.Max(minValue, (float)Math.Round((double)value - increment, 2));
             }));
         }
 

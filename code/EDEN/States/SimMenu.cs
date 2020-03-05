@@ -16,16 +16,6 @@ namespace EDEN {
         //Make button
         //Pass in position, size, text
 
-        NumInput popNum;
-        NumInput foodSpawn;
-        NumInput envSize;
-        NumInput waterLevel;
-        NumInput maxEnergy;
-        NumInput hiddenLayerCount;
-        NumInput hiddenLayerSize;
-
-
-
         public override void Start() {
             //set background
             bgColor = Color.DarkOliveGreen;
@@ -47,43 +37,43 @@ namespace EDEN {
             position.Y += 50;
 
             //Population
-            popNum = new NumInput("Population", 256, 128, 1024, position, 32);
+            NumInput popNum = new NumInput("Population", 256, 128, 1024, position, 32);
             AddComponent(popNum);
 
             position.Y += 50;
 
             //Food ratio
-            foodSpawn = new NumInput("Food spawn", 1, 0, 2, position, 0.1f);
+            NumInput foodSpawn = new NumInput("Food spawn", 1, 0, 2, position, 0.1f);
             AddComponent(foodSpawn);
 
             position.Y += 50;
 
             //Env size
-            envSize = new NumInput("Environment size", 1600, 320, 3200, position, 64);
+            NumInput envSize = new NumInput("Environment size", 1600, 320, 3200, position, 64);
             AddComponent(envSize);
 
             position.Y += 50;
 
             //Water
-            waterLevel = new NumInput("Water Level", 0.6f, 0.1f, 0.9f, position, 0.05f);
+            NumInput waterLevel = new NumInput("Water Level", 0.6f, 0.1f, 0.9f, position, 0.05f);
             AddComponent(waterLevel);
 
             position.Y += 50;
 
             //Max energy
-            maxEnergy = new NumInput("Max Energy", 96, 48, 192, position, 6);
+            NumInput maxEnergy = new NumInput("Max Energy", 96, 48, 192, position, 6);
             AddComponent(maxEnergy);
 
             position.Y += 50;
 
             //Layer size
 
-            hiddenLayerCount = new NumInput("Hidden Layer Count", 2, 0, 8, position, 1);
+            NumInput hiddenLayerCount = new NumInput("Hidden Layer Count", 2, 0, 8, position, 1);
             AddComponent(hiddenLayerCount);
 
             position.Y += 50;
 
-            hiddenLayerSize = new NumInput("Hidden Layer Size", 13, 1, 26, position, 1);
+            NumInput hiddenLayerSize = new NumInput("Hidden Layer Size", 13, 1, 26, position, 1);
             AddComponent(hiddenLayerSize);
 
             position.Y += 50;

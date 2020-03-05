@@ -44,6 +44,7 @@ namespace EDEN {
         }
 
         public void SwitchState(State state) {
+            activeState.active = false;
             activeState = state;
             activeState.SuperStart();
         }

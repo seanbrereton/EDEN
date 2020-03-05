@@ -40,7 +40,7 @@ namespace EDEN {
         float perceiveTimer;
         public float reproductionTimer;
 
-        Simulation sim;
+        public Simulation sim;
 
         public Creature() { }
 
