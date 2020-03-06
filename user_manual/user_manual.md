@@ -81,6 +81,7 @@ When a simulation is started it will run itself without the need of any user int
 - There is a camera that can be used to navigate the simulation. To zoom in and out you can either use the "+' and "-" keys or use the mouse scroll wheel. Users can also move around the simulation using the keyboard. The "W" or Up arrow keys move the camera up. The "S" or Down arrow keys move the camera down. The "A" or Left arrow keys move the camera left. The "D" or Right arrow keys move the camera right. Pressing the Shift key makes zooming and moving the camera faster while it is held down.
 - There is also a quad tree visualiser that can be shown by pressing the "Q" button. This shows how the screen is split into sections by the quad tree.
 - A user can also left click on a creature. This focuses the camera on the selected creature and follow it until the user moves the camera manually.
+- A user can press "1" to sort creatures on the sidebar by age, "2" to sort by children and "3" to sort by generation.
 - The simulation speed can also be sped up or slowed down. Pressing the "[" key slows down the simulation, whereas pressing the "]" key speed up time. Pressing the space bar toggles between pausing the simulation, and running it at regular speed.
 - When you are finished running the simulation you can exit without saving by closing the program or exit and save by pressing "Save" button which opens up your File Exporer. Here you can select where you want to save the simulation. After you save you can exit by pressing the "Exit" button above it.
 
