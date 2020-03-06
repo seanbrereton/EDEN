@@ -24,6 +24,7 @@
 - 4.2 Neural Network Unit tests
 - 4.3 Other Unit tests
 - 4.4 Functionality Tests
+- 4.5 Heuristics Testing
 
 5. Problems and Resolution
 
@@ -36,19 +37,19 @@
 
 ### 1.1 Overview
 
-EDEN is a program that simulates evolution of simple creatures that are controlled using neural networks. EDEN is built uisng C# and Monogame. Creatures live in an environment that comprises of land and water and food that spawns on land. Their objectives are to survive for as long as possible by finding and eating food and to reproduce by finding a suitable mate. Water is a challenge for them as it drains their energy much quicker than staying on land.
+EDEN is a program that simulates evolution of simple creatures that are controlled using neural networks. EDEN is built using C# and Monogame. Creatures live in an environment that is comprised of land and water and food that spawns on land. Their objectives are to survive for as long as possible by finding and eating food and to reproduce by finding a suitable mate. Water is a challenge for them as it drains their energy much quicker than staying on land.
 
 The system consists of a main menu, a simulation setting menu and the actual simulation itself. The main menu allows a user to start a new simulation, load a previous simulation or quit the application. A simulation menu appears if a user clicks on new simulation. This lets a user either start a new simulation with the default settings which we chose or they can start a new simulation with their own custom settings such as population size and water ratio. Once a simulation has been started the environment and creatures are spawned in. There is a simple GUI that shows the user statistics about the creatures including age, how many children they have and what generation the creature is.
 
-The creatures in the simulations use a basic Feed Forward Neural Network. This takes in inputs such as nearest food, nearest creature and its own energy. These inputs go through a number of hidden layers and produce 4 outputs. Hidden layer size can be set by the user in the custom simulation option. The 4 outputs are speed, direction, whether or not to eat and whether or not to reproduce. If a creature is spawned from the simulation and does not have parents it is given random behaviours. If these creatures are succesful in reproducing their genes will be passed onto further generations.
+The creatures in the simulations use a basic Feed Forward Neural Network. This takes in inputs such as nearest food, nearest creature and its own energy. These inputs go through a number of hidden layers and produce 4 outputs. Hidden layer size can be set by the user in the custom simulation option. The 4 outputs are speed, direction, whether or not to eat and whether or not to reproduce. If a creature is spawned from the simulation and does not have parents it is given random behaviours. If these creatures are successful in reproducing their genes will be passed onto future generations.
 
 ### 1.2 Glossary
 
-#### *Artificial neural Network*
+#### *Artificial Neural Network*
 
 - Artificial neural networks are computing systems that are inspired by the networks of neurons that make up biological brains. They have inputs that go through some amount of hidden layers, the weights and biases of which determine the outputs.
 
-#### *Feed Forawrd Neural Network*
+#### *Feed Forward Neural Network*
 
 - A feedforward neural network is an artificial neural network wherein connections between the nodes do not form a cycle. As such, it is different from recurrent neural networks
 
@@ -72,7 +73,10 @@ The creatures in the simulations use a basic Feed Forward Neural Network. This t
 
 ![System Architecture Diagram](images/architecture.png)
 
-ADD Description of diagram
+- In the diagram above a user opens up the application.
+- From here they can access save files, which go back through the application and are displayed to the user.
+- They can also access the application and run a simulation without accessing the save files.
+- Or the user can start the application through a saved file.
 
 This diagram ended up being the same as in the functional specification
 
@@ -80,7 +84,9 @@ This diagram ended up being the same as in the functional specification
 
 ### 3.1 Class Diagram
 
-![Class diagram](images/class.png)
+![Class Diagram 1](images/class1.png)
+![Class Diagram 2](images/class2.png)
+![Class Diagram 3](images/class3.png)
 
 ### 3.2 Data Flow Diagram
 
@@ -90,7 +96,7 @@ The Data Flow Diagrams is also the same as in the functional specification.
 
 ### 3.3 Feed-Forward Neural Network Diagram
 
-![Neural net Diagram](images/nn.PNG)
+![Neural Net Diagram](images/nn.PNG)
 
 - In this diagram the inputs nodes on the left go through 2 hidden layers of 5 nodes each.
 - There are 4 outputs on the right.
@@ -111,11 +117,11 @@ public static bool Press(Keys key, bool held = false) {
 
 This method allows us to easily check if a key was pressed. `IsKeyDown()` is a built in monogame method that returns a `bool` to see if a key is being pressed.
 
-Monogame also made graphics a lot easier. The built in `Draw()` function makes it easy to draw textures to the screen. This was useful for displaying creatures and the environment.
+Monogame also made graphics a lot easier. The built-in `Draw()` function makes it easy to draw textures to the screen. This was useful for displaying creatures and the environment.
 
 Overall the development of the project was quite smooth, aside from a few minor problems along the way. We implemented all the major features that we had planned to do in the functional specification. The main thing we changed was deciding against implementing fighting between creatures as we didn't feel like it would have much benefit.
 
-If we had more time to develop the project we would have made more improvements to the User Interface. We also would have tested different configurations for simulations and make other small environment changes to see the effects they would have. If we had of gotten ethical approval sooner we would have also liked to have external users test the system to get feedback about the UI and the simulation itself.
+If we had more time to develop the project we would have made more improvements to the User Interface. We also would have tested different configurations for simulations and make other small environment changes to see the effects they would have. If we had gotten ethical approval sooner we would have also liked to have external users test the system to get feedback about the UI and the simulation itself.
 
 ### 4.2 Neural Network Unit tests
 
@@ -162,7 +168,7 @@ public void FloatRangeTest1() {
 
 ### 4.4 Functionality tests
 
-To test the functionality of our system we walked through the application to check the functionality it. We checked functionalities such as loading simulations by trying to load invalid files. Initially it crashed the program. We added error handling which now gives an error message on the menu if an invalid file is chosen. We also tested it with valid `.bin` simulation save files
+To test the functionality of our system we walked through the application to check the functionality of different elements of it. We checked functionalities such as loading simulations by trying to load invalid files. Initially it crashed the program. We added error handling which now gives an error message on the menu if an invalid file is chosen. We also tested it with valid `.bin` simulation save files
 
 ![error message for load file](images/save.PNG)
 
@@ -184,7 +190,7 @@ To test the User Interface we looked at Jakob Nielsens' 10 general principles fo
 
 5. For example to prevent errors in creating simulations we made it so users can only choose values within a certain range.
 
-6. To minimise the user's memory load we made all information easily visible while the simualtion runs.
+6. To minimise the user's memory load we made all information easily visible while the simulation runs.
 
 7. There are keyboard shortcuts that can be used by an experienced user to speed up their interaction such as pressing Shift while moving the camera to speed up the camera. This still caters to inexperienced users as it is not important to the function of the program.
 
@@ -196,9 +202,9 @@ To test the User Interface we looked at Jakob Nielsens' 10 general principles fo
 
 ## 5. Problems and Resolution
 
-- **Problem:** The biggest problem we encountered was the efficiency of the program.  **Resolution** We found that our intitial method of collision detection used a lot of computation power when there were a lot of entities in the simulation. Initiially, every entity was checked against each other each frame which got very slow with large number of entities. We found that a data structure called a quad tree made these collsion checks much more efficient.
-- **Problem:** Some creatures lived too long by going in circles at maximum speed, collecting food. **Resolution:** We changed the energy and movement system to try and prevent this. Now moving faster uses up more of a creatures energy than if it were to move slower.
-- **Problem:** Not many creatures were willing to reproduce which made simulations end very quickly. **Resolution:** We made easier to for creatures to reproduce by making it cost less energy to do so. This meant more creatures reproduced, therefore passing on the more successful genes.
+- **Problem:** The biggest problem we encountered was the efficiency of the program.  **Resolution** We found that our initial method of collision detection used a lot of computation power when there were a lot of entities in the simulation. Initially, every entity was checked against each other each frame which got very slow with a large number of entities. We found that a data structure called a quadtree made these collision checks much more efficient.
+- **Problem:** Some creatures lived too long by going in circles at maximum speed, collecting food. **Resolution:** We changed the energy and movement system to try and prevent this. Now moving faster uses up more of a creature's energy than if it were to move slower.
+- **Problem:** Not many creatures were willing to reproduce which made simulations end very quickly. **Resolution:** We made it easier for creatures to reproduce by making it cost less energy to do so. This meant more creatures reproduced, therefore passing on the more successful genes.
 - **Problem:** We found that creatures did not have enough of a challenge other than finding food. **Resolution:** To solve this we added water to the environment. If a creature is in water they use up 4 times more energy than they would if they were on land. This led to more thoughtful behaviours in some creatures such as avoiding water or moving slowly through it to use less energy, whereas others died very fast in water.
 - **Problem:** Towards the end of development we found that most simulations gave very similar results. **Resolution:** We ended up implementing more customisable simulations where users can set population size, food spawn rates, environment size, maximum energy, water ratio and hidden layer settings. This resulted in more varied simulation results.
 
@@ -216,11 +222,11 @@ If building from source:
 
 ### 6.2 Installation Steps
 
-There are 2 different ways of installing the system. We recommend using the first option as it much faster and easier to use the download link.
+There are 2 different ways of installing the system. We recommend using the first option as it is much faster and easier to use the download link.
 
 #### From Download
 
-- Download the zip folder from ......
+- Download the zip folder from <https://gitlab.computing.dcu.ie/brerets4/2020-ca326-sbrereton-eden/blob/master/EDEN.zip>
 - Unzip the folder.
 - Open the folder and click on the file named `EDEN.exe`.
 - This will open the application.
