@@ -1,8 +1,19 @@
 # Eden User Manual
 
-## TOC
+## 0. Table Of Contents
 
-{:toc}
+1. Installation
+
+2. Starting Simulation
+
+- 2.1 Main Menu
+- 2.2 Simulation Menu
+- 2.3 Load Simulation
+
+3. Using the Simulation
+
+- 3.1 Understanding the GUI
+- 3.2 Controls
 
 ## 1. Installation
 
@@ -37,8 +48,9 @@ If you do not choose the Default simulation, you can configure 4 different aspec
 - The first configurable option is to set the initial population. Using the "+" and "-" buttons, you can make the starting population higher or lower. The lowest population option is 128 creatures and the highest is 1024 creatures.
 - The second option is to set the food spawn rate. This rate is relative to the population. For example, if the starting population is 256 then a rate of 1.2 will spawn 307 pieces of food. The lowest rate is 0 and the highest is 2.
 - The third option is to set the environment size. This makes the environment as a square with height being the chosen number. The lowest option is 320 x 320 and the highest option is 3200 x 3200.
-- H2O
-- hidden layer
+- Water levels can be configured. The range is 0. to 0.9.
+- The number of hidden layers can be changed using the hidden layer count option.
+- The hidden layer size changes how many nodes are in each hidden layer.
 - The last configurable option is to set the maximmum energy for creatures. If the maximum energy is 96, this means that a creature will have a maximum of 96 seconds to live if they do not eat more food. The lowest option is 48 seconds and the highest option is 192 seconds.
 
 Below is a picture of the simulation settings menu.

@@ -170,6 +170,30 @@ We tested other aspects of the menu such as custom simulation configurations. We
 
 Tests were also done to check the functionality of the actual simulation. We tested things like camera functionality, saving and exiting of the simulation, whether or not creature and environment attributes were being displayed correctly on the sidebar.
 
+### 4.5 Heuristics Testing
+
+To test the User Interface we looked at Jakob Nielsens' 10 general principles for interaction design
+
+1. We made sure the system status was always visible by showing users information about the current simulation on the sidebar at all times when running.
+
+2. To make sure the users understand the language of the system we designed the UI using words familiar to the average user.
+
+3. We gave the user control and freedom by adding back buttons in the menu in case they didn't want to choose a certain option. Also in the simulation users can save and exit when they want.
+
+4. We made sure words and actions had the same meaning throughout the program.
+
+5. For example to prevent errors in creating simulations we made it so users can only choose values within a certain range.
+
+6. To minimise the user's memory load we made all information easily visible while the simualtion runs.
+
+7. There are keyboard shortcuts that can be used by an experienced user to speed up their interaction such as pressing Shift while moving the camera to speed up the camera. This still caters to inexperienced users as it is not important to the function of the program.
+
+8. We designed the UI to have a minimal aesthetic so there is not too much unnecessary information displayed.
+
+9. There are error messages in place to help the user. For example if they choose an invalid file to load as a simulation and error message pops up to tell the user that they have chosen a wrong file.
+
+10. If a user has trouble with the system they can use the user manual to help them.
+
 ## 5. Problems and Resolution
 
 - **Problem:** The biggest problem we encountered was the efficiency of the program.  **Resolution** We found that our intitial method of collision detection used a lot of computation power when there were a lot of entities in the simulation. Initiially, every entity was checked against each other each frame which got very slow with large number of entities. We found that a data structure called a quad tree made these collsion checks much more efficient.
