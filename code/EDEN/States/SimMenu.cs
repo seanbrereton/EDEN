@@ -20,7 +20,7 @@ namespace EDEN {
             //set background
             bgColor = Color.DarkOliveGreen;
 
-            Vector2 position = new Vector2(app.screenSize.X / 2, (app.screenSize.Y / 2) - buttonHeight * 7.2f);
+            Vector2 position = new Vector2(app.screenSize.X / 2, (app.screenSize.Y / 2) - buttonHeight * 8.2f);
             
             //Back button
             AddComponent(new Button(buttonWidth, buttonHeight, Color.White, position, "Back to Main Menu", () => {
@@ -44,13 +44,13 @@ namespace EDEN {
             position.Y += 50;
 
             //Food ratio
-            NumInput foodSpawn = new NumInput("Food spawn", 1, 0, 2, position, 0.1f);
+            NumInput foodSpawn = new NumInput("Food Spawn", 1, 0, 2, position, 0.1f);
             AddComponent(foodSpawn);
 
             position.Y += 50;
 
             //Env size
-            NumInput envSize = new NumInput("Environment size", 1600, 320, 3200, position, 64);
+            NumInput envSize = new NumInput("Environment Size", 1600, 320, 3200, position, 64);
             AddComponent(envSize);
 
             position.Y += 50;

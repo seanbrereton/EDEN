@@ -126,9 +126,6 @@ namespace EDEN {
         }
 
         public override void HandleInput() {
-            if (Input.Click())
-                SpawnNewFood(Input.MouseWorldPos.ToVector2());
-
             // Stops focusing on a creature if any camera movement buttons are pressed
             if (Input.Press(Keys.W) || Input.Press(Keys.A) || Input.Press(Keys.S) || Input.Press(Keys.D)
                 || Input.Press(Keys.Up) || Input.Press(Keys.Left) || Input.Press(Keys.Down) || Input.Press(Keys.Right))
@@ -138,10 +135,13 @@ namespace EDEN {
             if (Input.Press(Keys.Q))
                 debug = !debug;
 
+            if (Input.Press(Keys.Space))
+                runSpeed = runSpeed > 0 ? 0 : 1;
+
             // Left square bracket speeds up sim and left slows down
-            if (Input.Press(Keys.OemCloseBrackets))
+            if (Input.Press(Keys.OemCloseBrackets) && runSpeed < 4)
                 runSpeed += 0.5f;
-            if (Input.Press(Keys.OemOpenBrackets))
+            if (Input.Press(Keys.OemOpenBrackets) && runSpeed > 0)
                 runSpeed -= 0.5f;
         }
     }
