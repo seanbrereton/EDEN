@@ -85,7 +85,11 @@ This diagram ended up being the same as in the functional specification
 ### 3.1 Class Diagram
 
 ![Class Diagram 1](images/class1.png)
+
+
 ![Class Diagram 2](images/class2.png)
+
+
 ![Class Diagram 3](images/class3.png)
 
 ### 3.2 Data Flow Diagram
