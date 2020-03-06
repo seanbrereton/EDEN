@@ -18,10 +18,10 @@
 ## 1. Installation
 
 - This system is intended to be used on Windows PCs.
-- The system can be downloaded as a zip file at ......
-- Once EDEN.zip has been downloaded, unzip the folder.
-- In the unzipped folder open the file called EDEN.exe.
-- This will launch the application and start up the main menu.
+- Download the zip folder from <https://gitlab.computing.dcu.ie/brerets4/2020-ca326-sbrereton-eden/blob/master/EDEN.zip>
+- Unzip the folder.
+- Open the folder and click on the file named `EDEN.exe`.
+- This will open the application.
 
 ## 2. Starting Simulation
 
@@ -43,7 +43,7 @@ On the top of the screen the "Back to Main Menu" button can be used to return to
 
 The first option is to start a simulation using default settings. This will load in a simulation using the preset options for population size, food spawn rates, environment size and the maximum energy a creature can have.
 
-If you do not choose the Default simulation, you can configure 4 different aspects of the simulation.
+If you do not choose the default simulation, you can configure 7 different aspects of the simulation.
 
 - The first configurable option is to set the initial population. Using the "+" and "-" buttons, you can make the starting population higher or lower. The lowest population option is 128 creatures and the highest is 1024 creatures.
 - The second option is to set the food spawn rate. This rate is relative to the population. For example, if the starting population is 256 then a rate of 1.2 will spawn 307 pieces of food. The lowest rate is 0 and the highest is 2.
@@ -81,7 +81,8 @@ When a simulation is started it will run itself without the need of any user int
 - There is a camera that can be used to navigate the simulation. To zoom in and out you can either use the "+' and "-" keys or use the mouse scroll wheel. Users can also move around the simulation using the keyboard. The "W" or Up arrow keys move the camera up. The "S" or Down arrow keys move the camera down. The "A" or Left arrow keys move the camera left. The "D" or Right arrow keys move the camera right. Pressing the Shift key makes zooming and moving the camera faster while it is held down.
 - There is also a quad tree visualiser that can be shown by pressing the "Q" button. This shows how the screen is split into sections by the quad tree.
 - A user can also left click on a creature. This focuses the camera on the selected creature and follow it until the user moves the camera manually.
-- The simulation speed can also be sped up or slowed down. Pressing the "[" key slows down the simulation, whereas pressing the "]" key speed up time.
+- A user can press "1" to sort creatures on the sidebar by age, "2" to sort by children and "3" to sort by generation.
+- The simulation speed can also be sped up or slowed down. Pressing the "[" key slows down the simulation, whereas pressing the "]" key speed up time. Pressing the space bar toggles between pausing the simulation, and running it at regular speed.
 - When you are finished running the simulation you can exit without saving by closing the program or exit and save by pressing "Save" button which opens up your File Exporer. Here you can select where you want to save the simulation. After you save you can exit by pressing the "Exit" button above it.
 
 ![Screenshot showing quad tree and zoom](images/quadtree.png)
